@@ -6,7 +6,7 @@ local globals = {}
 globals.centerX = display.contentCenterX
 
 --Number of Dots in a Pattern
-globals.numDots = 4
+globals.numFlashes = 4
 --Fonts
 globals.font = 
 {

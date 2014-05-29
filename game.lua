@@ -31,11 +31,11 @@ function scene:create( event )
         end
         --Set the y coordinate
         if i == 1  or i == 2 or i == 3 then
-            globals.dot[i].y = display.contentHeight - 350
+            globals.dot[i].y = display.contentHeight - 340
         elseif i == 4 or i == 5 or i == 6 then
-            globals.dot[i].y = display.contentHeight - 240
+            globals.dot[i].y = display.contentHeight - 230
         elseif i == 7 or i == 8 or i == 9 then
-            globals.dot[i].y = display.contentHeight - 130
+            globals.dot[i].y = display.contentHeight - 120
         end
     end
     
@@ -104,7 +104,7 @@ function scene:show( event )
                     globals.userPattern[i] = event.target
                     local function removeFlash()
                         local function checkIfEnteredTimes()
-                            if i == globals.numDots then
+                            if i == globals.numFlashes then
                                 --
                             else
                                 userEnter()
@@ -113,7 +113,6 @@ function scene:show( event )
                         transition.to(event.target, {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfEnteredTimes})
                     end
                     transition.to(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2})
-                    print("User copied dot " .. i .. " correctly: " .. tostring(globals.isCorrectPattern[i]))
                     for i = 1, 9 do
                         globals.dot[i]:removeEventListener("touch", onTouch)
                     end
@@ -143,7 +142,7 @@ function scene:show( event )
                 globals.pattern[i] = math.random(9)
                 print ("Dot " .. i .. " in pattern is " .. globals.pattern[i]) --> print which dot patternDot1 is
                 local function checkIfFoundFourTimes()
-                    if i == globals.numDots then
+                    if i == globals.numFlashes then
                         enterPattern()
                     end
                 end
@@ -152,7 +151,7 @@ function scene:show( event )
                 end
                 transition.to(globals.dot[globals.pattern[i]], {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
             end
-            timer.performWithDelay( 500, findPattern, globals.numDots )
+            timer.performWithDelay( 500, findPattern, globals.numFlashes )
         end
         
         --Start sequence

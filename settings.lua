@@ -1,47 +1,33 @@
 --Patterns
---menu.lua
+--settings.lua
 
 local composer = require( "composer" )
 local scene = composer.newScene()
+local json = require("json")
 local globals = require("globals")
+local widget = require("widget")
+---------------------------------------------------------------------------------
+-- All code outside of the listener functions will only be executed ONCE
+-- unless "composer.removeScene()" is called.
+---------------------------------------------------------------------------------
 
 -- local forward references should go here
+
+---------------------------------------------------------------------------------
 
 -- "scene:create()"
 function scene:create( event )
     
     local sceneGroup = self.view
+    local titleText = display.newText( sceneGroup, "SETTINGS", globals.centerX, display.contentHeight - 450, globals.font.regular, 32 )
+    titleText:setFillColor(0,0,0)
     
-    --display game title
-    local gameTitle = display.newText( sceneGroup, "patterns", globals.centerX, display.contentHeight - 425, globals.font.regular, 65 )
-    gameTitle.alpha = 0
-    gameTitle:setFillColor(0,0,0)
-    --display playbutton
-    local playbutton = display.newImage("images/playbutton.png")
-    playbutton.alpha = 0
-    playbutton.x, playbutton.y = globals.centerX, display.contentHeight - 115
-    sceneGroup:insert(playbutton)
+    --Number of Dots
+    local numFlashesTitle = display.newText( sceneGroup, "number of flashes", display.contentWidth - 215, display.contentHeight - 325, globals.font.regular, 24 )
+    numFlashesTitle:setFillColor(0,0,0)
+    local numFlashesText = display.newText( sceneGroup, globals.numFlashes, display.contentWidth - 25, display.contentHeight - 325, globals.font.regular, 24 )
+    numFlashesText:setFillColor(0,0,0)
     
-    --display settingsbutton
-    local settingsbutton = display.newImage("images/settingsbutton.png")
-    settingsbutton.alpha = 0
-    settingsbutton.x, settingsbutton.y =  globals.centerX, display.contentHeight - 45
-    sceneGroup:insert(settingsbutton)
-    
-    --Appear into screen
-    transition.to(gameTitle,{time = 1000 , alpha = 1 })
-    transition.to(playbutton, {time = 1200, alpha = 1})
-    transition.to(settingsbutton, {time = 1400, alpha = 1})
-    
-    local function gotoGame()
-        composer.gotoScene("game", {effect = "slideLeft"})
-    end
-    local function gotoSettings()
-        composer.gotoScene("settings", {effect = "slideLeft"})
-    end
-    --Add listeners
-    playbutton:addEventListener("tap", gotoGame)
-    settingsbutton:addEventListener("tap", gotoSettings)
 end
 
 -- "scene:show()"
@@ -53,6 +39,20 @@ function scene:show( event )
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
+        -- Slider listener
+        local function sliderListener( event )
+            print( "Slider at " .. event.value .. "%" )
+        end
+        
+        -- Create the widget
+        local numFlashesSlider = widget.newSlider
+        {
+            top = display.contentHeight - 305, --up and down
+            left = display.contentWidth - 300,--side to side
+            width = 275,
+            value = 20,  -- Start slider at 10% (optional)
+            listener = sliderListener
+        }
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.

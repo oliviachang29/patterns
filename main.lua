@@ -10,8 +10,11 @@ display.screenOriginY,
 display.pixelWidth, 
 display.pixelHeight)
 background.x, background.y = display.contentCenterX,  display.contentCenterY
-background:setFillColor(248/255, 248/255, 248/255) --238/255
+background:setFillColor(250/255, 250/255, 250/255) --238/255
 background:toBack()
+--local background = display.newImage("background.png")
+--background.x, background.y = display.contentCenterX,  display.contentCenterY
+--background:toBack()
 
 --Require
 local json = require("json")
