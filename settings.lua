@@ -24,11 +24,28 @@ function scene:create( event )
     --Number of Dots
     local numDotsTitle = display.newText( sceneGroup, "number of dots", display.contentWidth - 220, display.contentHeight - 460, globals.font.regular, 24 )
     numDotsTitle:setFillColor(0,0,0)
-    local nineDotsText = display.newText( sceneGroup, "9", display.contentWidth - 25, display.contentHeight - 460, globals.font.regular, 24 )
-    nineDotsText:setFillColor(0,0,0)
-    local fourDotsText = display.newText( sceneGroup, "4", display.contentWidth - 75, display.contentHeight - 460, globals.font.regular, 24 )
+    local fourDotsText = display.newText( sceneGroup, "4", display.contentWidth - 100, display.contentHeight - 460, globals.font.regular, 24 )
     fourDotsText:setFillColor(0,0,0)
-    --Number of Flashes
+    local nineDotsText = display.newText( sceneGroup, "9", display.contentWidth - 62, display.contentHeight - 460, globals.font.regular, 24 )
+    nineDotsText:setFillColor(0,0,0)
+    local sixteenDotsText = display.newText( sceneGroup, "16", display.contentWidth - 25, display.contentHeight - 460, globals.font.regular, 24 )
+    sixteenDotsText:setFillColor(0,0,0)
+    
+    --SELECTED CIRCLE
+    local selectedCircle = display.newImage( sceneGroup, "images/tealCircle.png", system.ResourceDirectory)
+    if globals.numDots == 4 then
+        selectedCircle.x, selectedCircle.y = display.contentWidth - 100, display.contentHeight - 460
+    elseif globals.numDots == 9 then
+        selectedCircle.x, selectedCircle.y = display.contentWidth - 62, display.contentHeight - 460
+    end
+--    local function moveCircle(event)
+--        
+--    end
+--    
+--    fourDotsText:addEventListener()
+--    nineDotsText:addEventListener()
+----    sixteenDotsText:addEventListener("tap", circleToSixteen)
+--    --Number of Flashes
     local numFlashesTitle = display.newText( sceneGroup, "number of flashes", display.contentWidth - 210, display.contentHeight - 400, globals.font.regular, 24 )
     numFlashesTitle:setFillColor(0,0,0)
     numFlashesText = display.newText( sceneGroup, globals.numFlashes, display.contentWidth - 25, display.contentHeight - 400, globals.font.regular, 24 )
@@ -74,8 +91,7 @@ function scene:show( event )
         
         -- Slider listener
         local function sliderListener( event )
---            print("Slider is at " .. event.value .. "%")
-            print("Here there be dragons")
+-           print("Slider is at " .. event.value .. "%")
             sliderPercent = event.value
             if ( 81<= sliderPercent) then
                 if (sliderPercent <= 100) then

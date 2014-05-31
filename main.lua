@@ -19,12 +19,12 @@ background:toBack()
 --Require
 local json = require("json")
 local composer = require("composer")
-local GGMusic = require ("GGMusic")
-
-----Play background music
+--local GGMusic = require ("GGMusic")
+--
+------Play background music
 --local music = GGMusic:new()
---music:add( "track1.mp3" )
---music:add("track2.mp3")
+--music:add( "audio/track1.mp3" )
+--music:add("audio/track2.mp3")
 --music:setVolume( 0.6)
 
 --globals.settings = loadTable("settings.json")
