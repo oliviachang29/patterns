@@ -5,8 +5,11 @@ local globals = {}
 --Constants
 globals.centerX = display.contentCenterX
 
---Number of Dots in a Pattern
-globals.numFlashes = 4
+--Settings
+globals.numDots =  9 --Number of Dots, default 9
+globals.numFlashes = 4 --Number of Flashes in a Pattern, default 4
+globals.musicSetting = true --Music on/off, default true
+globals.soundSetting = true --Sound on/off, default true
 --Fonts
 globals.font = 
 {

@@ -31,38 +31,38 @@ function scene:create( event )
         end
         --Set the y coordinate
         if i == 1  or i == 2 or i == 3 then
-            globals.dot[i].y = display.contentHeight - 340
+            globals.dot[i].y = display.contentHeight - 380
         elseif i == 4 or i == 5 or i == 6 then
-            globals.dot[i].y = display.contentHeight - 230
+            globals.dot[i].y = display.contentHeight - 270
         elseif i == 7 or i == 8 or i == 9 then
-            globals.dot[i].y = display.contentHeight - 120
+            globals.dot[i].y = display.contentHeight - 160
         end
     end
     
     --Lives
     --Lives order: 1 2 3
-    local livesText = display.newText(sceneGroup, "lives", display.contentWidth - 265, display.contentHeight - 460 , globals.font.regular, 25)
+    local livesText = display.newText(sceneGroup, "lives", display.contentWidth - 265, display.contentHeight - 500 , globals.font.regular, 25)
     livesText:setFillColor(0,0,0)
     globals.life = {}
     for i = 1, 3 do
         globals.life[i] = display.newImage("images/fullLife.png")
         sceneGroup:insert(globals.life[i])
         globals.life[i].x = display.contentWidth - (325 - (i * 30))
-        globals.life[i].y = display.contentHeight - 425
+        globals.life[i].y = display.contentHeight - 465
     end
     
     --Time (A means above)
-    local timeA = display.newText(sceneGroup, "time", display.contentWidth - 160, display.contentHeight - 460, globals.font.regular, 25)
+    local timeA = display.newText(sceneGroup, "time", display.contentWidth - 160, display.contentHeight - 500, globals.font.regular, 25)
     timeA:setFillColor(0,0,0)
     timeLeft = 10
-    timeText = display.newText(sceneGroup, timeLeft, display.contentWidth - 160, display.contentHeight - 425, globals.font.regular, 25)
+    timeText = display.newText(sceneGroup, timeLeft, display.contentWidth - 160, display.contentHeight - 465, globals.font.regular, 25)
     timeText:setFillColor(0,0,0)
     
     --Score (A means above)
-    local scoreA = display.newText(sceneGroup, "score", display.contentWidth - 55, display.contentHeight - 460, globals.font.regular, 25)
+    local scoreA = display.newText(sceneGroup, "score", display.contentWidth - 55, display.contentHeight - 500, globals.font.regular, 25)
     scoreA:setFillColor(0,0,0)
     score = 0
-    local scoreText = display.newText(sceneGroup, score, display.contentWidth - 55, display.contentHeight - 425, globals.font.regular, 25)
+    local scoreText = display.newText(sceneGroup, score, display.contentWidth - 55, display.contentHeight - 465, globals.font.regular, 25)
     scoreText:setFillColor(0,0,0)
 end
 
@@ -73,8 +73,12 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-        -- Called when the scene is still off screen (but is about to come on screen).
+
     elseif ( phase == "did" ) then
+        local function checkPattern()
+            
+        end
+        --enterPattern isn't working because event.target is nil'
         local function enterPattern()
             if timeText == nil then
                 print("ERROR: timeText is nil - User in userDotCopy about to select dots")
@@ -84,7 +88,7 @@ function scene:show( event )
                 timeLeft = timeLeft -1
                 timeText.text = timeLeft
                 --                if time == 0 then
-                --                    checkIfScore()
+                --                    checkPattern()
                 --                end
             end
 --            if globals.userPattern[i] == globals.pattern[i] then
@@ -102,23 +106,24 @@ function scene:show( event )
                 i = timesEntered
                 local function onTouch()
                     globals.userPattern[i] = event.target
+                    print(event.target) -- event.target is nil
                     local function removeFlash()
                         local function checkIfEnteredTimes()
                             if i == globals.numFlashes then
-                                --
+                                checkPattern()
                             else
                                 userEnter()
                             end
                         end
                         transition.to(event.target, {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfEnteredTimes})
                     end
-                    transition.to(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2})
+                    transition.to(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                     for i = 1, 9 do
-                        globals.dot[i]:removeEventListener("touch", onTouch)
+                        globals.dot[i]:removeEventListener("tap", onTouch)
                     end
                 end
                 for i = 1, 9 do
-                    globals.dot[i]:addEventListener("touch", onTouch)
+                    globals.dot[i]:addEventListener("tap", onTouch)
                 end
             end
             userEnter()

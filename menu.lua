@@ -13,24 +13,28 @@ function scene:create( event )
     local sceneGroup = self.view
     
     --display game title
-    local gameTitle = display.newText( sceneGroup, "patterns", globals.centerX, display.contentHeight - 425, globals.font.regular, 65 )
+    local gameTitle = display.newText( sceneGroup, "patterns", globals.centerX, display.contentHeight - 500, globals.font.regular, 65 )
     gameTitle.alpha = 0
     gameTitle:setFillColor(0,0,0)
+    
     --display playbutton
-    local playbutton = display.newImage("images/playbutton.png")
-    playbutton.alpha = 0
-    playbutton.x, playbutton.y = globals.centerX, display.contentHeight - 115
+    local playbutton = display.newGroup()
     sceneGroup:insert(playbutton)
     
+    local playbg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 115)
+    playbg.alpha = 0
+    local playtext = display.newText( sceneGroup, "play", globals.centerX, display.contentHeight - 115, globals.font.regular, 25 )
+    playtext.alpha = 0
+
     --display settingsbutton
-    local settingsbutton = display.newImage("images/settingsbutton.png")
+    local settingsbutton = display.newImage( sceneGroup, "images/settingsbutton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 45)
     settingsbutton.alpha = 0
-    settingsbutton.x, settingsbutton.y =  globals.centerX, display.contentHeight - 45
     sceneGroup:insert(settingsbutton)
     
     --Appear into screen
     transition.to(gameTitle,{time = 1000 , alpha = 1 })
-    transition.to(playbutton, {time = 1200, alpha = 1})
+    transition.to(playbg, {time = 1200, alpha = 1})
+    transition.to(playtext, {time = 1200, alpha = 1})
     transition.to(settingsbutton, {time = 1400, alpha = 1})
     
     local function gotoGame()
@@ -40,7 +44,7 @@ function scene:create( event )
         composer.gotoScene("settings", {effect = "slideLeft"})
     end
     --Add listeners
-    playbutton:addEventListener("tap", gotoGame)
+    playbg:addEventListener("tap", gotoGame)
     settingsbutton:addEventListener("tap", gotoSettings)
 end
 
