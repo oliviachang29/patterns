@@ -27,10 +27,20 @@ local composer = require("composer")
 --music:add("audio/track2.mp3")
 --music:setVolume( 0.6)
 
---globals.settings = loadTable("settings.json")
---if globals.settings == nil then
---    globals.settings = {}
---    globals.settings.highScore = 0
---end
+local globals = require("globals")
+globals.settings = loadTable("settings.json")
+if globals.settings == nil then
+    globals.settings = {}
+    globals.settings.highScore = 0
+    --Settings
+--    globals.settings.numDots =  9 --Number of Dots, default 9
+    globals.settings.numFlashes = 4 --Number of Flashes in a Pattern, default 4
+--    globals.settings.time = 10 --Time, default 10
+    globals.settings.music = true --Music on/off, default true
+    globals.settings.sound = true --Sound on/off, default true
+end
 
+--Not yet customizable
+globals.settings.time = 10 --Time, default 10
+globals.settings.numDots =  9 --Number of Dots, default 9
 composer.gotoScene("menu")

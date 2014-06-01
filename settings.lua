@@ -13,6 +13,8 @@ local widget = require("widget")
 
 -- local forward references should go here
 local numFlashesText
+local timeText
+local numFlashesSlider
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
@@ -33,23 +35,28 @@ function scene:create( event )
     
     --SELECTED CIRCLE
     local selectedCircle = display.newImage( sceneGroup, "images/tealCircle.png", system.ResourceDirectory)
-    if globals.numDots == 4 then
+    if globals.settings.numDots == 4 then
         selectedCircle.x, selectedCircle.y = display.contentWidth - 100, display.contentHeight - 460
-    elseif globals.numDots == 9 then
+    elseif globals.settings.numDots == 9 then
         selectedCircle.x, selectedCircle.y = display.contentWidth - 62, display.contentHeight - 460
     end
---    local function moveCircle(event)
---        
---    end
---    
---    fourDotsText:addEventListener()
---    nineDotsText:addEventListener()
-----    sixteenDotsText:addEventListener("tap", circleToSixteen)
---    --Number of Flashes
+    --    local function moveCircle(event)
+    --        
+    --    end
+    --    
+    --    fourDotsText:addEventListener()
+    --    nineDotsText:addEventListener()
+    ----    sixteenDotsText:addEventListener("tap", circleToSixteen)
+    --    --Number of Flashes
     local numFlashesTitle = display.newText( sceneGroup, "number of flashes", display.contentWidth - 210, display.contentHeight - 400, globals.font.regular, 24 )
     numFlashesTitle:setFillColor(0,0,0)
-    numFlashesText = display.newText( sceneGroup, globals.numFlashes, display.contentWidth - 25, display.contentHeight - 400, globals.font.regular, 24 )
+    numFlashesText = display.newText( sceneGroup, globals.settings.numFlashes, display.contentWidth - 25, display.contentHeight - 400, globals.font.regular, 24 )
     numFlashesText:setFillColor(0,0,0)
+    
+    --    local timeTitle = display.newText( sceneGroup, "time", display.contentWidth - 280, display.contentHeight - 325, globals.font.regular, 24 )
+    --    timeTitle:setFillColor(0,0,0)
+    --    timeText = display.newText( sceneGroup, globals.time .. "seconds", display.contentWidth - 25, display.contentHeight - 325, globals.font.regular, 24 )
+    --    timeText:setFillColor(0,0,0)
     --Color
     local colorTitle = display.newText( sceneGroup, "color", display.contentWidth - 280, display.contentHeight - 300, globals.font.regular, 24 )
     colorTitle:setFillColor(0,0,0)
@@ -90,68 +97,123 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         
         -- Slider listener
-        local function sliderListener( event )
--           print("Slider is at " .. event.value .. "%")
+        local function flashesSliderListener( event )
+            print("Flashes slider  is at " .. event.value .. "%")
             sliderPercent = event.value
             if ( 81<= sliderPercent) then
                 if (sliderPercent <= 100) then
-                    globals.numFlashes = 7
+                    globals.settings.numFlashes = 7
                     numFlashesText.text = "7"
                 end
             elseif ( 61<= sliderPercent) then
                 if (sliderPercent <= 80) then
-                    globals.numFlashes = 6
+                    globals.settings.numFlashes = 6
                     numFlashesText.text = "6"
                 end
             elseif ( 41<= sliderPercent) then
                 if (sliderPercent <= 60) then
-                    globals.numFlashes = 5
+                    globals.settings.numFlashes = 5
                     numFlashesText.text = "5"
                 end
             elseif ( 21<= sliderPercent) then
                 if (sliderPercent <= 40) then
-                    globals.numFlashes = 4
+                    globals.settings.numFlashes = 4
                     numFlashesText.text = "4"
                 end
             elseif ( 0<= sliderPercent) then
                 if (sliderPercent <= 20) then
-                    globals.numFlashes = 3
+                    globals.settings.numFlashes = 3
                     numFlashesText.text = "3"
                 end
             end
+            saveTable(globals.settings, "settings.json")
         end
-        local sliderValue = 0
-        if (globals.numFlashes == 4) then
-            sliderValue = 21
-        elseif (globals.numFlashes == 5) then
-            sliderValue = 41
-        elseif (globals.numFlashes == 6) then
-            sliderValue = 61
-        elseif (globals.numFlashes == 7) then
-            sliderValue = 81
+        local flashesSliderValue = 0
+        if (globals.settings.numFlashes == 4) then
+            flashesSliderValue = 21
+        elseif (globals.settings.numFlashes == 5) then
+            flashesSliderValue = 41
+        elseif (globals.settings.numFlashes == 6) then
+            flashesSliderValue = 61
+        elseif (globals.settings.numFlashes == 7) then
+            flashesSliderValue = 81
         end
         -- Create the widget
-        local numFlashesSlider = widget.newSlider
+        numFlashesSlider = widget.newSlider
         {
             top = display.contentHeight - 380, --up and down
             left = display.contentWidth - 305,--side to side
             width = 285,
-            value = sliderValue,  -- Start slider at value
-            listener = sliderListener
+            value = flashesSliderValue,  -- Start slider at value
+            listener = flashesSliderListener
         }
         sceneGroup:insert(numFlashesSlider)
+        
+        --        --Time slider
+        --        local function timeSliderListener( event )
+        --           print("Time slider  is at " .. event.value .. "%")
+        --            sliderPercent = event.value
+        --            if ( 81<= sliderPercent) then
+        --                if (sliderPercent <= 100) then
+        --                    globals.time = 10
+        --                    timeText.text = "10"
+        --                end
+        --            elseif ( 61<= sliderPercent) then
+        --                if (sliderPercent <= 80) then
+        --                    globals.time = 6
+        --                    timeText.text = "9"
+        --                end
+        --            elseif ( 41<= sliderPercent) then
+        --                if (sliderPercent <= 60) then
+        --                    globals.time = 5
+        --                    timeText.text = "8"
+        --                end
+        --            elseif ( 21<= sliderPercent) then
+        --                if (sliderPercent <= 40) then
+        --                    globals.time = 4
+        --                    timeText.text = "7"
+        --                end
+        --            elseif ( 0<= sliderPercent) then
+        --                if (sliderPercent <= 20) then
+        --                    globals.time = 3
+        --                    timeText.text = "6"
+        --                end
+        --            end
+        --        end
+        --        local timeSliderValue = 0
+        --        if (globals.time == 7) then
+        --            timeSliderValue = 21
+        --        elseif (globals.settings.numFlashes == 8) then
+        --            timeSliderValue = 41
+        --        elseif (globals.settings.numFlashes == 9) then
+        --            timeSliderValue = 61
+        --        elseif (globals.settings.numFlashes == 10) then
+        --            timeSliderValue = 81
+        --        end
+        --        -- Create the widget
+        --        local timeSlider = widget.newSlider
+        --        {
+        --            top = display.contentHeight - 380, --up and down
+        --            left = display.contentWidth - 305,--side to side
+        --            width = 285,
+        --            value = timeSliderValue,  -- Start slider at value
+        --            listener = timeSliderListener
+        --        }
+        --        sceneGroup:insert(timeSlider)
+        
         --SOUND--
         -- Handle press events for the checkbox
         local function onSoundPress( event )
             local switch = event.target
             if switch.isOn == true then
-                globals.soundSetting = true
+                globals.settings.sound = true
             elseif switch.isOn== false then
-                globals.soundSetting = false
+                globals.settings.sound = false
             else
                 print("Error: Sound switch.id is neither true or false.")
             end
-            print("Sound on: " .. tostring(globals.soundSetting))
+            saveTable(globals.settings, "settings.json")
+            print("Sound on: " .. tostring(globals.settings.sound))
         end
         
         -- Create the widget
@@ -162,26 +224,28 @@ function scene:show( event )
             id = "soundSwitch",
             onPress = onSoundPress
         }
-        if globals.soundSetting == true then
+        if globals.settings.sound == true then
             soundSwitch:setState( { isOn=true} )
-        elseif globals.soundSetting == false then
+        elseif globals.settings.sound == false then
             soundSwitch:setState( { isOn=false} )
         else
             print("Sound is neither off or on...")
         end
         sceneGroup:insert(soundSwitch)
+        
         --MUSIC--
         -- Handle press events for the checkbox
         local function onMusicPress( event )
             local switch = event.target
             if switch.isOn== true then
-                globals.musicSetting = true
+                globals.settings.music = true
             elseif switch.isOn == false then
-                globals.musicSetting = false
+                globals.settings.music = false
             else
                 print("Error: Music switch.id is neither true or false.")
             end
-            print("Music on: " .. tostring(globals.musicSetting))
+            saveTable(globals.settings, "settings.json")
+            print("Music on: " .. tostring(globals.settings.music))
         end
         
         -- Create the widget
@@ -193,9 +257,9 @@ function scene:show( event )
             id = "musicSwitch",
             onPress = onMusicPress
         }
-        if globals.musicSetting == true then
+        if globals.settings.music == true then
             musicSwitch:setState( { isOn=true} )
-        elseif globals.musicSetting == false then
+        elseif globals.settings.music == false then
             musicSwitch:setState( { isOn=false} )
         else
             print("Music is neither off or on...")
@@ -215,7 +279,8 @@ function scene:hide( event )
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
     elseif ( phase == "did" ) then
-        
+        display.remove(numFlashesSlider)
+        numFlashesSlider = nil
     end
 end
 
@@ -223,6 +288,7 @@ end
 function scene:destroy( event )
     
     local sceneGroup = self.view
+    
     -- Called prior to the removal of scene's view ("sceneGroup").
     -- Insert code here to clean up the scene.
     -- Example: remove display objects, save state, etc.

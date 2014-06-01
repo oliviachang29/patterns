@@ -5,16 +5,11 @@ local globals = {}
 --Constants
 globals.centerX = display.contentCenterX
 
---Settings
-globals.numDots =  9 --Number of Dots, default 9
-globals.numFlashes = 4 --Number of Flashes in a Pattern, default 4
-globals.musicSetting = true --Music on/off, default true
-globals.soundSetting = true --Sound on/off, default true
+
 --Fonts
 globals.font = 
 {
     regular = "Museo Sans 300",
-    bold = "Museo Sans 500"
 }
 
 -- Code comes from: http://omnigeek.robmiracle.com/2012/02/23/need-to-save-your-game-data-in-corona-sdk-check-out-this-little-bit-of-code/
