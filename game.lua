@@ -15,7 +15,7 @@ local numLife
 
 local ding
 local ding2
-local sucess
+local success
 local fail
 -- "scene:create()"
 function scene:create( event )
@@ -68,6 +68,21 @@ function scene:create( event )
                 dot[i].y = display.contentHeight - 200
             end
         end
+--    elseif globals.settings.numDots == 16 then
+--        for i = 1, 16 do
+--            --Set the x coordinate
+--            if i == 1 or i == 5 or i == 9 or i == 13 then
+--                dot[i].x = display.contentWidth - 200
+--            elseif i == 2 or i == 4 then
+--                dot[i].x = display.contentWidth - 100
+--            end
+--            --Set the y coordinate
+--            if i == 1 or i == 2 then
+--                dot[i].y = display.contentHeight - 300
+--            elseif i == 3 or i == 4 then
+--                dot[i].y = display.contentHeight - 200
+--            end
+--        end
     end
     
     --Lives
@@ -107,12 +122,15 @@ function scene:show( event )
     if ( phase == "will" ) then
         ding = audio.loadSound("audio/ding.wav")
         ding2 = audio.loadSound("audio/ding2.wav")
-        successSound = audio.loadSound("audio/success.wav")
-        failSound = audio.loadSound("audio/fail.wav")
+        success = audio.loadSound("audio/success.wav")
+        fail = audio.loadSound("audio/fail.wav")
         audio.setVolume(0.8)
     elseif ( phase == "did" ) then
         local findPattern
         local function checkPattern()
+            if globals.flashSpeed >= 60 then
+                globals.flashSpeed = globals.flashSpeed - 4
+            end
             timer.cancel(timerHandler)
             timeLeft = 10
             timeText.text = timeLeft
@@ -124,20 +142,22 @@ function scene:show( event )
                 end
             end
             if numCorrect == globals.settings.numFlashes then
+                audio.play(success)
                 globals.score = globals.score + 1
                 scoreText.text = globals.score
-                findPattern()
+                timer.performWithDelay(250, findPattern)
             else
+                audio.play(fail)
                 numLife = numLife - 1
                 if numLife == 2 or numLife == 1  then
                     transition.to(life[numLife + 1], {time = 250, alpha = 0})
                     life[numLife + 1] = nil
-                    findPattern()
+                    timer.performWithDelay(250, findPattern)
                 elseif numLife == 0 then
                     transition.to(life[1], {time = 250, alpha = 0, onComplete = composer.gotoScene("lost", {effect = "slideLeft"})})
                     timer.cancel(timerHandler)
                 end
-                print("user lost a life, lives: " .. numLife)
+                print("User lost a life. Current number of lives: " .. numLife)
             end
         end
         
@@ -149,7 +169,7 @@ function scene:show( event )
             local function timeCount()
                 timeLeft = timeLeft -1
                 timeText.text = timeLeft
-                if time == 0 then
+                if timeLeft == 0 then
                     checkPattern()
                     print("Time is 0. Checking pattern.")
                 end
@@ -196,7 +216,7 @@ function scene:show( event )
             local timesFound = 0
             
             local function findPattern()
-                audio.play(ding2)
+                audio.play(ding)
                 timesFound = timesFound + 1
                 local i = timesFound
                 globals.pattern[i] = dot[math.random(globals.settings.numDots)]
