@@ -5,7 +5,6 @@ local globals = {}
 --Constants
 globals.centerX = display.contentCenterX
 
-
 --Fonts
 globals.font = 
 {

@@ -26,27 +26,32 @@ function scene:create( event )
     --Number of Dots
     local numDotsTitle = display.newText( sceneGroup, "number of dots", display.contentWidth - 220, display.contentHeight - 460, globals.font.regular, 24 )
     numDotsTitle:setFillColor(0,0,0)
-    local fourDotsText = display.newText( sceneGroup, "4", display.contentWidth - 100, display.contentHeight - 460, globals.font.regular, 24 )
-    fourDotsText:setFillColor(0,0,0)
-    local nineDotsText = display.newText( sceneGroup, "9", display.contentWidth - 62, display.contentHeight - 460, globals.font.regular, 24 )
-    nineDotsText:setFillColor(0,0,0)
-    local sixteenDotsText = display.newText( sceneGroup, "16", display.contentWidth - 25, display.contentHeight - 460, globals.font.regular, 24 )
-    sixteenDotsText:setFillColor(0,0,0)
+    local dotsText= {}
+    dotsText[4] = display.newText( sceneGroup, "4", display.contentWidth - 100, display.contentHeight - 460, globals.font.regular, 24 )
+    dotsText[4]:setFillColor(0,0,0)
+    dotsText[9] = display.newText( sceneGroup, "9", display.contentWidth - 62, display.contentHeight - 460, globals.font.regular, 24 )
+    dotsText[9]:setFillColor(0,0,0)
+    dotsText[16] = display.newText( sceneGroup, "16", display.contentWidth - 25, display.contentHeight - 460, globals.font.regular, 24 )
+    dotsText[16]:setFillColor(0,0,0)
     
     --SELECTED CIRCLE
     local selectedCircle = display.newImage( sceneGroup, "images/tealCircle.png", system.ResourceDirectory)
-    if globals.settings.numDots == 4 then
-        selectedCircle.x, selectedCircle.y = display.contentWidth - 100, display.contentHeight - 460
-    elseif globals.settings.numDots == 9 then
-        selectedCircle.x, selectedCircle.y = display.contentWidth - 62, display.contentHeight - 460
+    selectedCircle.x, selectedCircle.y = dotsText[globals.settings.numDots].x, display.contentHeight - 460
+    local function moveCircle(event)
+        transition.to(selectedCircle, {time = 250, x = event.target.x})
+        if event.target == dotsText[4] then
+            globals.settings.numDots = 4
+        elseif event.target == dotsText[9] then
+            globals.settings.numDots = 9
+        elseif event.target == dotsText[16] then
+            globals.settings.numDots = 16
+        end
+        print("globals.settings.numDots is " .. globals.settings.numDots)
+        saveTable(globals.settings, "settings.json")
     end
-    --    local function moveCircle(event)
-    --        
-    --    end
-    --    
-    --    fourDotsText:addEventListener()
-    --    nineDotsText:addEventListener()
-    ----    sixteenDotsText:addEventListener("tap", circleToSixteen)
+    dotsText[4]:addEventListener("tap", moveCircle)
+    dotsText[9]:addEventListener("tap", moveCircle)
+    dotsText[16]:addEventListener("tap", moveCircle)
     --    --Number of Flashes
     local numFlashesTitle = display.newText( sceneGroup, "number of flashes", display.contentWidth - 210, display.contentHeight - 400, globals.font.regular, 24 )
     numFlashesTitle:setFillColor(0,0,0)

@@ -21,17 +21,16 @@ local fail
 function scene:create( event )
     local sceneGroup = self.view
     --Dots
-    -- 9 Dot order:
-    --1   2   3
-    --4   5   6
-    --7   8   9
-    -- 4 Dot order
-    --1 2
-    --3 4
-    
+    -- Dot order: 
+    -- Top left starts as 1, moves horizontally then to the next line.
+    -- Bottom right is the number of dots
     dot = {}
     for i = 1, globals.settings.numDots do
-        dot[i] = display.newImage("images/dot.png")
+        if globals.settings.numDots == 9 or globals.settings.numDots == 4 then
+            dot[i] = display.newImage("images/dot.png")
+        elseif globals.settings.numDots == 16 then
+            dot[i] = display.newImage("images/smallDot.png")
+        end
         sceneGroup:insert(dot[i])
     end
     if globals.settings.numDots == 9 then
@@ -68,21 +67,33 @@ function scene:create( event )
                 dot[i].y = display.contentHeight - 200
             end
         end
---    elseif globals.settings.numDots == 16 then
---        for i = 1, 16 do
---            --Set the x coordinate
---            if i == 1 or i == 5 or i == 9 or i == 13 then
---                dot[i].x = display.contentWidth - 200
---            elseif i == 2 or i == 4 then
---                dot[i].x = display.contentWidth - 100
---            end
---            --Set the y coordinate
---            if i == 1 or i == 2 then
---                dot[i].y = display.contentHeight - 300
---            elseif i == 3 or i == 4 then
---                dot[i].y = display.contentHeight - 200
---            end
---        end
+    elseif globals.settings.numDots == 16 then
+        for i = 1, 16 do
+            --1 2 3 4
+            --5 6 7 8
+            --9 10 11 12
+            --13 14 15 16
+            --Set the x coordinate
+            if i == 1 or i == 5 or i == 9 or i == 13 then
+                dot[i].x = display.contentWidth - 280
+            elseif i == 2 or i == 6 or i == 10 or i == 14 then
+                dot[i].x = display.contentWidth - 200
+            elseif i == 3 or i == 7 or i == 11 or i == 15 then
+                dot[i].x = display.contentWidth - 120
+            elseif i == 4 or i == 8 or i == 12 or i == 16 then
+                dot[i].x = display.contentWidth - 40
+            end
+            --Set the y coordinate
+            if i == 1 or i == 2 or i == 3 or i == 4 then
+                dot[i].y = display.contentHeight - 380
+            elseif i == 5 or i == 6 or i == 7 or i == 8 then
+                dot[i].y = display.contentHeight - 300
+            elseif i == 9 or i == 10 or i == 11 or i == 12 then
+                dot[i].y = display.contentHeight - 220
+            elseif i == 13 or i == 14 or i == 15 or i == 16 then
+                dot[i].y = display.contentHeight - 140
+            end
+        end
     end
     
     --Lives
@@ -159,6 +170,9 @@ function scene:show( event )
                 end
                 print("User lost a life. Current number of lives: " .. numLife)
             end
+            globals.pattern = nil
+            globals.userPattern = nil
+            numCorrect = nil
         end
         
         local function enterPattern()

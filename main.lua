@@ -20,8 +20,8 @@ background:toBack()
 local json = require("json")
 local composer = require("composer")
 --local GGMusic = require ("GGMusic")
---
-------Play background music
+
+----Play background music
 --local music = GGMusic:new()
 --music:add( "audio/track1.mp3" )
 --music:add("audio/track2.mp3")
@@ -33,14 +33,13 @@ if globals.settings == nil then
     globals.settings = {}
     globals.settings.highScore = 0
     --Settings
---    globals.settings.numDots =  9 --Number of Dots, default 9
+    globals.settings.numDots =  9 --Number of Dots, default 9
     globals.settings.numFlashes = 4 --Number of Flashes in a Pattern, default 4
---    globals.settings.time = 10 --Time, default 10
+    globals.settings.time = 10 --Time, default 10
     globals.settings.music = true --Music on/off, default true
     globals.settings.sound = true --Sound on/off, default true
 end
 
 --Not yet customizable
 globals.settings.time = 10 --Time, default 10
-globals.settings.numDots =  9 --Number of Dots, default 9
 composer.gotoScene("menu")
