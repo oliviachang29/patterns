@@ -17,11 +17,30 @@ local ding
 local ding2
 local success
 local fail
--- "scene:create()"
+local pausedText
+local resumebg
+local resumetext
+local restartbg
+local restarttext
+local exitbg
+local exittext
+
 function scene:create( event )
     local sceneGroup = self.view
-    --Not functional while code starting at line 265 is commented out
+    --Not functional while code starting at line 265 or line 32 is commented out
     pauseButton = display.newImage( sceneGroup, "images/pauseButton.png", system.ResourceDirectory, display.contentWidth - 280, display.contentHeight - 540)
+--    --PAUSED text
+--    pausedText = display.newText( sceneGroup, "PAUSED", display.contentWidth + 500, display.contentHeight - 400, globals.font.regular, 32 )
+--    pausedText:setFillColor(0,0,0)
+--    --Resume button
+--    resumebg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 325)
+--    resumetext = display.newText( sceneGroup, "resume", display.contentWidth + 500, display.contentHeight - 325, globals.font.regular, 25 )
+--    --Restart button
+--    restartbg = display.newImage( sceneGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 250)
+--    restarttext = display.newText( sceneGroup, "restart", display.contentWidth + 500, display.contentHeight - 250, globals.font.regular, 25 )
+--    --Restart button
+--    exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 175)
+--    exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, display.contentHeight - 175, globals.font.regular, 25 )
     --Dots
     -- Dot order: 
     -- Top left starts as 1, moves horizontally then to the next line.
@@ -126,13 +145,19 @@ function scene:create( event )
     scoreText:setFillColor(0,0,0)
 end
 
--- "scene:show()"
+
 function scene:show( event )
     
     local sceneGroup = self.view
     local phase = event.phase
-    
+    local pauseGroup = display.newGroup()
+    sceneGroup:insert(pauseGroup)
     if ( phase == "will" ) then
+        for i = 1, globals.settings.numDots do
+            dot[i].alpha = 1
+        end
+        pauseButton.alpha = 1
+        --        pauseGroup.x = display.contentWidth + 500
         ding = audio.loadSound("audio/ding.wav")
         ding2 = audio.loadSound("audio/ding2.wav")
         success = audio.loadSound("audio/success.wav")
@@ -273,22 +298,11 @@ function scene:show( event )
 --            for i = 1, globals.settings.numDots do
 --                transition.to(dot[i], {time = 150, alpha = 0})
 --            end
---            --PAUSED text
---            local pausedText = display.newText( sceneGroup, "PAUSED", display.contentWidth + 500, display.contentHeight - 400, globals.font.regular, 32 )
---            pausedText:setFillColor(0,0,0)
---            --Resume button
---            local resumebg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 325)
---            local resumetext = display.newText( sceneGroup, "resume", display.contentWidth + 500, display.contentHeight - 325, globals.font.regular, 25 )
---            --Restart button
---            local restartbg = display.newImage( sceneGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 250)
---            local restartext = display.newText( sceneGroup, "restart", display.contentWidth + 500, display.contentHeight - 250, globals.font.regular, 25 )
---            --Restart button
---            local exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 175)
---            local exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, display.contentHeight - 175, globals.font.regular, 25 )
 --            local function gotoMenu()
 --                isRunning = true
 --                transition:cancel()
 --                audio:stop()
+--                pauseGroup = nil
 --                composer.gotoScene("menu", {effect = "slideRight"})
 --            end
 --            exitbg:addEventListener("tap", gotoMenu)
@@ -300,7 +314,7 @@ function scene:show( event )
 --                        transition.to(exittext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
 --                    end
 --                    transition.to(restartbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
---                    transition.to(restartext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
+--                    transition.to(restarttext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
 --                end
 --                transition.to(resumebg, {time = 250, transition = easing.inQuad, x = globals.centerX})
 --                transition.to(resumetext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionRestart})
@@ -312,7 +326,7 @@ function scene:show( event )
     end
 end
 
--- "scene:hide()"
+
 function scene:hide( event )
     
     local sceneGroup = self.view
@@ -323,6 +337,7 @@ function scene:hide( event )
             globals.settings.highScore = globals.score
         end
         saveTable(globals.settings, "settings.json")
+        
         -- Called when the scene is on screen (but is about to go off screen).
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
@@ -331,7 +346,7 @@ function scene:hide( event )
     end
 end
 
--- "scene:destroy()"
+
 function scene:destroy( event )
     
     local sceneGroup = self.view
