@@ -58,14 +58,15 @@ function scene:create( event )
     numFlashesText = display.newText( sceneGroup, globals.settings.numFlashes, display.contentWidth - 25, display.contentHeight - 400, globals.font.regular, 24 )
     numFlashesText:setFillColor(0,0,0)
     
-    --    local timeTitle = display.newText( sceneGroup, "time", display.contentWidth - 280, display.contentHeight - 325, globals.font.regular, 24 )
-    --    timeTitle:setFillColor(0,0,0)
-    --    timeText = display.newText( sceneGroup, globals.time .. "seconds", display.contentWidth - 25, display.contentHeight - 325, globals.font.regular, 24 )
-    --    timeText:setFillColor(0,0,0)
     --Color
+    local function gotoColor()
+        composer.gotoScene("color", {effect = "slideLeft"})
+    end
+    
     local colorTitle = display.newText( sceneGroup, "color", display.contentWidth - 280, display.contentHeight - 300, globals.font.regular, 24 )
     colorTitle:setFillColor(0,0,0)
-    
+    local colorDot = display.newImage( sceneGroup, "images/smallDot/" .. globals.settings.color .. ".png", system.ResourceDirectory, display.contentWidth - 40, display.contentHeight - 300)
+    colorDot:addEventListener("tap", gotoColor)
     --Sound
     local soundTitle = display.newText( sceneGroup, "sound", display.contentWidth - 274, display.contentHeight - 240, globals.font.regular, 24 )
     soundTitle:setFillColor(0,0,0)
@@ -153,58 +154,6 @@ function scene:show( event )
             listener = flashesSliderListener
         }
         sceneGroup:insert(numFlashesSlider)
-        
-        --        --Time slider
-        --        local function timeSliderListener( event )
-        --           print("Time slider  is at " .. event.value .. "%")
-        --            sliderPercent = event.value
-        --            if ( 81<= sliderPercent) then
-        --                if (sliderPercent <= 100) then
-        --                    globals.time = 10
-        --                    timeText.text = "10"
-        --                end
-        --            elseif ( 61<= sliderPercent) then
-        --                if (sliderPercent <= 80) then
-        --                    globals.time = 6
-        --                    timeText.text = "9"
-        --                end
-        --            elseif ( 41<= sliderPercent) then
-        --                if (sliderPercent <= 60) then
-        --                    globals.time = 5
-        --                    timeText.text = "8"
-        --                end
-        --            elseif ( 21<= sliderPercent) then
-        --                if (sliderPercent <= 40) then
-        --                    globals.time = 4
-        --                    timeText.text = "7"
-        --                end
-        --            elseif ( 0<= sliderPercent) then
-        --                if (sliderPercent <= 20) then
-        --                    globals.time = 3
-        --                    timeText.text = "6"
-        --                end
-        --            end
-        --        end
-        --        local timeSliderValue = 0
-        --        if (globals.time == 7) then
-        --            timeSliderValue = 21
-        --        elseif (globals.settings.numFlashes == 8) then
-        --            timeSliderValue = 41
-        --        elseif (globals.settings.numFlashes == 9) then
-        --            timeSliderValue = 61
-        --        elseif (globals.settings.numFlashes == 10) then
-        --            timeSliderValue = 81
-        --        end
-        --        -- Create the widget
-        --        local timeSlider = widget.newSlider
-        --        {
-        --            top = display.contentHeight - 380, --up and down
-        --            left = display.contentWidth - 305,--side to side
-        --            width = 285,
-        --            value = timeSliderValue,  -- Start slider at value
-        --            listener = timeSliderListener
-        --        }
-        --        sceneGroup:insert(timeSlider)
         
         --SOUND--
         -- Handle press events for the checkbox

@@ -41,6 +41,7 @@ function scene:create( event )
 --    --Restart button
 --    exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 175)
 --    exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, display.contentHeight - 175, globals.font.regular, 25 )
+
     --Dots
     -- Dot order: 
     -- Top left starts as 1, moves horizontally then to the next line.
@@ -48,9 +49,12 @@ function scene:create( event )
     dot = {}
     for i = 1, globals.settings.numDots do
         if globals.settings.numDots == 9 or globals.settings.numDots == 4 then
-            dot[i] = display.newImage("images/dot.png")
+--            dot[i] = display.newCircle( sceneGroup, xCenter, yCenter, radius )
+            
+            dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
         elseif globals.settings.numDots == 16 then
-            dot[i] = display.newImage("images/smallDot.png")
+            dot[i] = display.newImage("images/smallDot/" .. globals.settings.color .. ".png")
+--            dot[i] = display.newCircle( sceneGroup, xCenter, yCenter, radius )
         end
         sceneGroup:insert(dot[i])
     end
@@ -90,10 +94,6 @@ function scene:create( event )
         end
     elseif globals.settings.numDots == 16 then
         for i = 1, 16 do
-            --1 2 3 4
-            --5 6 7 8
-            --9 10 11 12
-            --13 14 15 16
             --Set the x coordinate
             if i == 1 or i == 5 or i == 9 or i == 13 then
                 dot[i].x = display.contentWidth - 280
@@ -184,12 +184,16 @@ function scene:show( event )
                     end
                 end
                 if numCorrect == globals.settings.numFlashes then
-                    audio.play(success)
+                    if globals.settings.sound == true then
+                        audio.play(success)
+                    end
                     globals.score = globals.score + 1
                     scoreText.text = globals.score
                     timer.performWithDelay(250, findPattern)
                 else
-                    audio.play(fail)
+                    if globals.settings.sound == true then
+                        audio.play(fail)
+                    end
                     numLife = numLife - 1
                     if numLife == 2 or numLife == 1  then
                         transition.to(life[numLife + 1], {time = 250, alpha = 0})
@@ -229,7 +233,9 @@ function scene:show( event )
                     timesEntered = timesEntered + 1
                     i = timesEntered
                     local function onTouch(event)
-                        audio.play(ding)
+                        if globals.settings.sound == true then
+                            audio.play(ding)
+                        end
                         globals.userPattern[i] = event.target
                         local function removeFlash(obj)
                             local function checkIfEnteredTimes()
@@ -265,7 +271,9 @@ function scene:show( event )
                 local timesFound = 0
                 
                 local function findPattern()
-                    audio.play(ding)
+                    if globals.settings.sound == true then
+                        audio.play(ding)
+                    end
                     timesFound = timesFound + 1
                     local i = timesFound
                     globals.pattern[i] = dot[math.random(globals.settings.numDots)]

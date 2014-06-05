@@ -38,8 +38,10 @@ if globals.settings == nil then
     globals.settings.time = 10 --Time, default 10
     globals.settings.music = true --Music on/off, default true
     globals.settings.sound = true --Sound on/off, default true
+--    globals.settings.color = "teal"
 end
 
 --Not yet customizable
 globals.settings.time = 10 --Time, default 10
+globals.settings.color = "teal"
 composer.gotoScene("menu")
