@@ -29,18 +29,18 @@ function scene:create( event )
     local sceneGroup = self.view
     --Not functional while code starting at line 265 or line 32 is commented out
     pauseButton = display.newImage( sceneGroup, "images/pauseButton.png", system.ResourceDirectory, display.contentWidth - 280, display.contentHeight - 540)
---    --PAUSED text
---    pausedText = display.newText( sceneGroup, "PAUSED", display.contentWidth + 500, display.contentHeight - 400, globals.font.regular, 32 )
---    pausedText:setFillColor(0,0,0)
---    --Resume button
---    resumebg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 325)
---    resumetext = display.newText( sceneGroup, "resume", display.contentWidth + 500, display.contentHeight - 325, globals.font.regular, 25 )
---    --Restart button
---    restartbg = display.newImage( sceneGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 250)
---    restarttext = display.newText( sceneGroup, "restart", display.contentWidth + 500, display.contentHeight - 250, globals.font.regular, 25 )
---    --Restart button
---    exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 175)
---    exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, display.contentHeight - 175, globals.font.regular, 25 )
+    --PAUSED text
+    pausedText = display.newText( sceneGroup, "PAUSED", display.contentWidth + 500, display.contentHeight - 400, globals.font.regular, 32 )
+    pausedText:setFillColor(0,0,0)
+    --Resume button
+    resumebg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 325)
+    resumetext = display.newText( sceneGroup, "resume", display.contentWidth + 500, display.contentHeight - 325, globals.font.regular, 25 )
+    --Restart button
+    restartbg = display.newImage( sceneGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 250)
+    restarttext = display.newText( sceneGroup, "restart", display.contentWidth + 500, display.contentHeight - 250, globals.font.regular, 25 )
+    --Restart button
+    exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 175)
+    exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, display.contentHeight - 175, globals.font.regular, 25 )
 
     --Dots
     -- Dot order: 
@@ -163,6 +163,7 @@ function scene:show( event )
         success = audio.loadSound("audio/success.wav")
         fail = audio.loadSound("audio/fail.wav")
         audio.setVolume(0.8)
+        timeLeft = 10
     elseif ( phase == "did" ) then
         local findPattern
         local timerHandler
@@ -271,22 +272,25 @@ function scene:show( event )
                 local timesFound = 0
                 
                 local function findPattern()
-                    if globals.settings.sound == true then
-                        audio.play(ding)
-                    end
-                    timesFound = timesFound + 1
-                    local i = timesFound
-                    globals.pattern[i] = dot[math.random(globals.settings.numDots)]
-                    --print ("Dot " .. i .. " in pattern is " .. globals.pattern[i]) --> print which dot patternDot1 is
-                    local function checkIfFoundTimes()
-                        if i == globals.settings.numFlashes then
-                            enterPattern()
+                    if isRunning == true then
+                        if globals.settings.sound == true then
+                            audio.play(ding)
                         end
+                        timesFound = timesFound + 1
+                        local i = timesFound
+                        globals.pattern[i] = dot[math.random(globals.settings.numDots)]
+                        --print ("Dot " .. i .. " in pattern is " .. globals.pattern[i]) --> print which dot patternDot1 is
+                        local function checkIfFoundTimes()
+                            if i == globals.settings.numFlashes then
+                                enterPattern()
+                            end
+                        end
+                        local function removeFlash()
+                            transition.to(globals.pattern[i], {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
+                        end
+                        transition.to(globals.pattern[i], {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                     end
-                    local function removeFlash()
-                        transition.to(globals.pattern[i], {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
-                    end
-                    transition.to(globals.pattern[i], {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+
                 end
                 timer.performWithDelay( 500, findPattern, globals.settings.numFlashes )
             end
@@ -295,41 +299,41 @@ function scene:show( event )
         --Start sequence
         findPattern()
         
---        local function pauseGame()
---            isRunning = false
---            transition.pause()
---            audio.pause(0)
---            if timerHandler ~= nil then
---                timer.pause(timerHandler)
---            end
---            transition.to(pauseButton, {time = 150, alpha = 0})
---            for i = 1, globals.settings.numDots do
---                transition.to(dot[i], {time = 150, alpha = 0})
---            end
---            local function gotoMenu()
---                isRunning = true
---                transition:cancel()
---                audio:stop()
---                pauseGroup = nil
---                composer.gotoScene("menu", {effect = "slideRight"})
---            end
---            exitbg:addEventListener("tap", gotoMenu)
---            --Transition
---            local function transitionResume()
---                local function transitionRestart()
---                    local function transitionExit()
---                        transition.to(exitbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
---                        transition.to(exittext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
---                    end
---                    transition.to(restartbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
---                    transition.to(restarttext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
---                end
---                transition.to(resumebg, {time = 250, transition = easing.inQuad, x = globals.centerX})
---                transition.to(resumetext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionRestart})
---            end
---            transition.to(pausedText, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionResume})
---        end
---        pauseButton:addEventListener("tap", pauseGame)
+        local function pauseGame()
+            isRunning = false
+            transition.pause()
+            audio.pause(0)
+            if timerHandler ~= nil then
+                timer.pause(timerHandler)
+            end
+            transition.to(pauseButton, {time = 150, alpha = 0})
+            for i = 1, globals.settings.numDots do
+                transition.to(dot[i], {time = 150, alpha = 0})
+            end
+            local function gotoMenu()
+                isRunning = true
+                transition:cancel()
+                audio:stop()
+                pauseGroup = nil
+                composer.gotoScene("menu", {effect = "slideRight"})
+            end
+            exitbg:addEventListener("tap", gotoMenu)
+            --Transition
+            local function transitionResume()
+                local function transitionRestart()
+                    local function transitionExit()
+                        transition.to(exitbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
+                        transition.to(exittext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
+                    end
+                    transition.to(restartbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
+                    transition.to(restarttext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
+                end
+                transition.to(resumebg, {time = 250, transition = easing.inQuad, x = globals.centerX})
+                transition.to(resumetext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionRestart})
+           end
+            transition.to(pausedText, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionResume})
+        end
+        pauseButton:addEventListener("tap", pauseGame)
         
     end
 end
