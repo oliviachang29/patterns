@@ -13,8 +13,8 @@ local widget = require("widget")
 
 -- local forward references should go here
 local numFlashesText
-local timeText
 local numFlashesSlider
+local colorDot
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
@@ -59,14 +59,9 @@ function scene:create( event )
     numFlashesText:setFillColor(0,0,0)
     
     --Color
-    local function gotoColor()
-        composer.gotoScene("color", {effect = "slideLeft"})
-    end
-    
     local colorTitle = display.newText( sceneGroup, "color", display.contentWidth - 280, display.contentHeight - 300, globals.font.regular, 24 )
     colorTitle:setFillColor(0,0,0)
-    local colorDot = display.newImage( sceneGroup, "images/smallDot/" .. globals.settings.color .. ".png", system.ResourceDirectory, display.contentWidth - 40, display.contentHeight - 300)
-    colorDot:addEventListener("tap", gotoColor)
+    
     --Sound
     local soundTitle = display.newText( sceneGroup, "sound", display.contentWidth - 274, display.contentHeight - 240, globals.font.regular, 24 )
     soundTitle:setFillColor(0,0,0)
@@ -99,9 +94,14 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-        -- Called when the scene is still off screen (but is about to come on screen).
-    elseif ( phase == "did" ) then
+        local function gotoColor()
+            composer.gotoScene("color", {effect = "slideLeft"})
+        end
         
+        colorDot = display.newImage( sceneGroup, "images/smallDot/" .. globals.settings.color .. ".png", system.ResourceDirectory, display.contentWidth - 40, display.contentHeight - 300)
+        colorDot:addEventListener("tap", gotoColor)
+        
+        --WIDGETS
         -- Slider listener
         local function flashesSliderListener( event )
             print("Flashes slider  is at " .. event.value .. "%")
@@ -148,7 +148,7 @@ function scene:show( event )
         numFlashesSlider = widget.newSlider
         {
             top = display.contentHeight - 380, --up and down
-            left = display.contentWidth - 305,--side to side
+            left = display.contentWidth - 320,--side to side
             width = 285,
             value = flashesSliderValue,  -- Start slider at value
             listener = flashesSliderListener
@@ -219,6 +219,8 @@ function scene:show( event )
             print("Music is neither off or on...")
         end
         sceneGroup:insert(musicSwitch)
+    elseif ( phase == "did" ) then
+        
     end
 end
 

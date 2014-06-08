@@ -16,6 +16,7 @@ globals.font =
 local json = require("json")
 
 function saveTable(t,filename)
+    --print("Saving table into file " .. filename)
     local path = system.pathForFile(filename,system.DocumentsDirectory)
     local file = io.open(path, "w")
     if file then

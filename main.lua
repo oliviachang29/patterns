@@ -19,13 +19,10 @@ background:toBack()
 --Require
 local json = require("json")
 local composer = require("composer")
---local GGMusic = require ("GGMusic")
 
-----Play background music
+--Music
+--local GGMusic = require( "GGMusic" )
 --local music = GGMusic:new()
---music:add( "audio/track1.mp3" )
---music:add("audio/track2.mp3")
---music:setVolume( 0.6)
 
 local globals = require("globals")
 globals.settings = loadTable("settings.json")
@@ -38,10 +35,10 @@ if globals.settings == nil then
     globals.settings.time = 10 --Time, default 10
     globals.settings.music = true --Music on/off, default true
     globals.settings.sound = true --Sound on/off, default true
---    globals.settings.color = "teal"
+    globals.settings.color = 1
 end
 
 --Not yet customizable
 globals.settings.time = 10 --Time, default 10
-globals.settings.color = "teal"
+
 composer.gotoScene("menu")

@@ -1,22 +1,3 @@
--- Project: GGMusic
---
--- Date: September 4, 2012
---
--- Version: 0.1
---
--- File name: GGMusic.lua
---
--- Author: Graham Ranson of Glitch Games - www.glitchgames.co.uk
---
--- Update History:
---
--- 0.1 - Initial release
---
--- Comments: 
---
---		GGMusic allows you to play a list of background music tracks in linear or random 
---		order in your Corona SDK powered apps.
---
 -- Copyright (C) 2012 Graham Ranson, Glitch Games Ltd.
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy of this 
@@ -287,3 +268,4 @@ function GGMusic:destroy()
 end
 
 return GGMusic
+
