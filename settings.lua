@@ -190,11 +190,14 @@ function scene:show( event )
         --MUSIC--
         -- Handle press events for the checkbox
         local function onMusicPress( event )
+            local GGMusic = require("GGMusic")
             local switch = event.target
             if switch.isOn== true then
                 globals.settings.music = true
+                globals.music:play()
             elseif switch.isOn == false then
                 globals.settings.music = false
+                globals.music:stop()
             else
                 print("Error: Music switch.id is neither true or false.")
             end
