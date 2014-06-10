@@ -52,12 +52,9 @@ function scene:create( event )
     dot = {}
     for i = 1, globals.settings.numDots do
         if globals.settings.numDots == 9 or globals.settings.numDots == 4 then
-            --            dot[i] = display.newCircle( sceneGroup, xCenter, yCenter, radius )
-            
             dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
         elseif globals.settings.numDots == 16 then
             dot[i] = display.newImage("images/smallDot/" .. globals.settings.color .. ".png")
-            --            dot[i] = display.newCircle( sceneGroup, xCenter, yCenter, radius )
         end
         sceneGroup:insert(dot[i])
     end
@@ -258,12 +255,10 @@ function scene:show( event )
                         end
                         userPattern[i] = event.target
                         local function removeFlash(obj)
-                            local function checkIfEnteredTimes()
-                                if i == globals.settings.numFlashes then
-                                    checkPattern()
-                                else
-                                    userEnter()
-                                end
+                            if i == globals.settings.numFlashes then
+                                checkPattern()
+                            else
+                                userEnter()
                             end
                             transition.to(obj, {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfEnteredTimes})
                         end
@@ -298,7 +293,6 @@ function scene:show( event )
                         timesFound = timesFound + 1
                         local i = timesFound
                         pattern[i] = dot[math.random(globals.settings.numDots)]
-                        --print ("Dot " .. i .. " in pattern is " .. pattern[i]) --> print which dot patternDot1 is
                         local function checkIfFoundTimes()
                             if i == globals.settings.numFlashes then
                                 enterPattern()

@@ -148,7 +148,7 @@ function scene:show( event )
         numFlashesSlider = widget.newSlider
         {
             top = display.contentHeight - 380, --up and down
-            left = display.contentWidth - 320,--side to side
+            left = display.contentWidth - 305,--side to side
             width = 285,
             value = flashesSliderValue,  -- Start slider at value
             listener = flashesSliderListener

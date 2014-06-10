@@ -19,9 +19,6 @@ function scene:create( event )
     local sceneGroup = self.view
     local titleText = display.newText( sceneGroup, "ABOUT", globals.centerX, display.contentHeight - 525, globals.font.regular, 32 )
     titleText:setFillColor(0,0,0)
-    local function gotoSettings()
-        composer.gotoScene("settings", {effect = "slideRight"})
-    end
     --credits text
     local madeByText = display.newText( sceneGroup, "made by", globals.centerX, display.contentHeight - 425, globals.font.regular, 23)
     madeByText:setFillColor(0,0,0)
@@ -37,9 +34,16 @@ function scene:create( event )
     madeByText:setFillColor(0,0,0)
 
     --tutorial button
+    local function gotoTutorial()
+        composer.gotoScene("tutorial", {effect = "slideLeft"})
+    end
     local tutorialbg = display.newImage( sceneGroup, "images/smallPinkButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 150)
     local tutorialText = display.newText( sceneGroup, "tutorial", globals.centerX, display.contentHeight - 150, globals.font.regular, 25 )
+    tutorialbg:addEventListener("tap", gotoTutorial)
     --back button
+    local function gotoSettings()
+        composer.gotoScene("settings", {effect = "slideRight"})
+    end
     local backbg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
     local backText = display.newText( sceneGroup, "back", globals.centerX, display.contentHeight - 90, globals.font.regular, 25 )
     backbg:addEventListener("tap", gotoSettings)
