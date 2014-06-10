@@ -32,6 +32,7 @@ if globals.settings == nil then
     globals.settings.music = true --Music on/off, default true
     globals.settings.sound = true --Sound on/off, default true
     globals.settings.color = 1
+    globals.settings.openedBefore = false
 end
 
 --Music
@@ -45,4 +46,9 @@ if globals.settings.music == true then
     globals.music.random = true
 end
 
-composer.gotoScene("menu")
+if globals.settings.openedBefore == false then
+    composer.gotoScene("tutorial")
+    
+elseif globals.settings.openedBefore == true then
+    composer.gotoScene("menu")
+end

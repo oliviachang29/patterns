@@ -17,18 +17,22 @@ function scene:create( event )
     local sceneGroup = self.view
     local ding = audio.loadSound("audio/ding.wav")
     local function scene4()
-        local helloThereText = display.newText( sceneGroup, "Hello there.", globals.centerX, display.contentHeight - 450, globals.font.regular, 23 )
-        helloThereText:setFillColor(0,0,0)
-        local hibg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
-        local hiText = display.newText( sceneGroup, "hi.", globals.centerX, display.contentHeight - 90, globals.font.regular, 23 )
-        local function gotoScene2()
-            transition.to(helloThereText, {time = 750, x = display.contentWidth - 1000})
-            transition.to(hibg, {time = 750, x = display.contentWidth - 1000})
-            transition.to(hiText, {time = 750, x = display.contentWidth - 1000, onComplete = scene2})
-            --Make them nil
-            helloThereText, hibg, hiText = nil, nil, nil
+        local youGotIt = display.newText( sceneGroup, "You've got it.", globals.centerX, display.contentHeight - 450, globals.font.regular, 23 )
+        youGotIt:setFillColor(0,0,0)
+        local readyToPlay = display.newText( sceneGroup, "Ready to play?", globals.centerX, display.contentHeight - 425, globals.font.regular, 23 )
+        readyToPlay:setFillColor(0,0,0)
+        local yepbg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
+        local yepText = display.newText( sceneGroup, "yep.", globals.centerX, display.contentHeight - 90, globals.font.regular, 23 )
+        local function goto()
+            if globals.settings.openedBefore == false then
+                composer.gotoScene("menu")
+                globals.settings.openedBefore = true
+                saveTable(globals.settings, "settings.json")
+            elseif globals.settings.openedBefore == true then
+                composer.gotoScene("about")
+            end
         end
-        hibg:addEventListener("tap", gotoScene2)
+        yepbg:addEventListener("tap", goto)
     end
     
     local function scene3()
