@@ -133,7 +133,7 @@ function scene:create( event )
     --Time (A means above)
     local timeA = display.newText(sceneGroup, "time", display.contentWidth - 160, display.contentHeight - 500, globals.font.regular, 25)
     timeA:setFillColor(0,0,0)
-    timeLeft = globals.settings.time
+    timeLeft = 10
     timeText = display.newText(sceneGroup, timeLeft, display.contentWidth - 160, display.contentHeight - 465, globals.font.regular, 25)
     timeText:setFillColor(0,0,0)
     
@@ -153,6 +153,8 @@ function scene:show( event )
     local pauseGroup = display.newGroup()
     sceneGroup:insert(pauseGroup)
     if ( phase == "will" ) then
+        globals.score = 0
+        scoreText.text = globals.score
         isRunning = true
         numLife = 3
         for i = 1, 3 do
@@ -168,9 +170,9 @@ function scene:show( event )
         --        restarttext.x = display.contentHeight + 500
         --        exitbg.x = display.contentHeight + 500
         --        exittext.x = display.contentHeight + 500
-        for i = 1, globals.settings.numDots do
-            dot[i].alpha = 1
-        end
+--        for i = 1, globals.settings.numDots do
+--            dot[i].alpha = 1
+--        end
         timeLeft = 10
         ding = audio.loadSound("audio/ding.wav")
         ding2 = audio.loadSound("audio/ding2.wav")

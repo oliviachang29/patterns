@@ -9,16 +9,17 @@ local globals = require("globals")
 ---------------------------------------------------------------------------------
 
 -- local forward references should go here
-
+local scoreText
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
 function scene:create( event )
+    print(globals.score)
    local sceneGroup = self.view
    --Fix placement + spacing
    local scoreTitle = display.newText( sceneGroup, "score", globals.centerX, display.contentHeight - 500, globals.font.regular, 50 )
    scoreTitle:setFillColor(0,0,0)
-   local scoreText = display.newText( sceneGroup, globals.score, globals.centerX, display.contentHeight - 425, globals.font.regular, 50 )
+   scoreText = display.newText( sceneGroup, globals.score, globals.centerX, display.contentHeight - 425, globals.font.regular, 50 )
    scoreText:setFillColor(0,0,0)
    local bestScoreTitle = display.newText( sceneGroup, "best score", globals.centerX, display.contentHeight - 350, globals.font.regular, 50)
    bestScoreTitle:setFillColor(0,0,0)
@@ -30,6 +31,7 @@ function scene:create( event )
     local playAgainText = display.newText( sceneGroup, "play again", globals.centerX, display.contentHeight - 150, globals.font.regular, 25 )
     local function gotoGame()
         composer.gotoScene("game", {effect = "slideRight"})
+        globals.score = 0
     end
     playAgainbg:addEventListener("tap", gotoGame)
    
@@ -38,6 +40,7 @@ function scene:create( event )
     local exitText = display.newText( sceneGroup, "exit", globals.centerX, display.contentHeight - 80, globals.font.regular, 25 )
     local function gotoMenu()
         composer.gotoScene("menu", {effect = "slideRight"})
+        globals.score = 0
     end
     exitbg:addEventListener("tap", gotoMenu)
 end
@@ -49,6 +52,7 @@ function scene:show( event )
    local phase = event.phase
 
    if ( phase == "will" ) then
+       scoreText.text = globals.score
       -- Called when the scene is still off screen (but is about to come on screen).
    elseif ( phase == "did" ) then
       -- Called when the scene is now on screen.

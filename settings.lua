@@ -192,7 +192,12 @@ function scene:show( event )
         local function onMusicPress( event )
             local GGMusic = require("GGMusic")
             local switch = event.target
-            if switch.isOn== true then
+            if switch.isOn == true then
+                globals.music = GGMusic:new()
+                globals.music:add( "audio/track1.mp3" )
+                globals.music:add( "audio/track1.mp3" )
+                globals.music:setVolume( 0.6 )
+                globals.music.random = true
                 globals.settings.music = true
                 globals.music:play()
             elseif switch.isOn == false then

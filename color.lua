@@ -58,7 +58,7 @@ function scene:create( event )
         for i = 1, 9 do
             colorDot[i].alpha = 0.35
         end
-        transition.to(event.target, {time = 200, alpha = 1})
+        transition.to(event.target, {time = 225, alpha = 1})
         if event.target == colorDot[1] then
             globals.settings.color = 1
         elseif event.target == colorDot[2] then
