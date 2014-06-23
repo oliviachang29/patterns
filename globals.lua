@@ -12,7 +12,6 @@ globals.font =
 }
 
 -- Code comes from: http://omnigeek.robmiracle.com/2012/02/23/need-to-save-your-game-data-in-corona-sdk-check-out-this-little-bit-of-code/
-
 local json = require("json")
 
 function saveTable(t,filename)

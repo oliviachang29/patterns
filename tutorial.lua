@@ -188,6 +188,11 @@ function scene:show( event )
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
+        if globals.openedBefore == false then
+            composer.returnTo = "menu"
+        elseif globals.openedBefore == true then
+            composer.returnTo = "about"
+        end
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
