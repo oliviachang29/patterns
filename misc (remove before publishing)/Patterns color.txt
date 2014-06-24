@@ -1,0 +1,47 @@
+Patterns Dots Colors
+
+    --1. Teal
+    --2. Pink
+    --3. Dark Green
+    --4. Orange
+    --5. Red
+    --6. Dark Blue
+    --7. Blue
+    --8. Purple
+    --9. Green
+
+Teal:
+Hex: 00B4B0
+RGB: 0, 180, 176
+
+Pink:
+Hex: ED1BB1
+RGB: 237, 27, 177
+
+Dark Green:
+Hex: 188278
+RGB: 24, 130, 120
+
+Orange:
+Hex: FE9700
+RGB: 254, 151, 0
+
+Red:
+Hex: FF6161
+RGB: 255, 97, 97
+
+Dark Blue:
+Hex: 373847
+RGB: 55, 56, 71
+
+Blue:
+Hex: 60169E
+RGB: 96, 22, 158
+
+Purple:
+Hex: 951F98
+RGB: 149, 31, 152
+
+Green:
+Hex: 13BF47
+RGB: 19, 191, 72

@@ -24,27 +24,28 @@ local restartbg
 local restarttext
 local exitbg
 local exittext
+--local pauseGroup = display.newGroup()
 
 --local pauseGroup = display.newGroup()
 
 function scene:create( event )
     local sceneGroup = self.view
-    --Not functional while code at line 29, starting at line 265 and line 32 is commented out
-    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, display.contentWidth - 280, display.contentHeight - 540)
-    --    --PAUSED text
-    --    pausedText = display.newText( pauseGroup, "PAUSED", display.contentWidth + 500, display.contentHeight - 400, globals.font.regular, 32 )
-    --    pausedText:setFillColor(0,0,0)
-    --    --Resume button
-    --    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 325)
-    --    resumetext = display.newText( pauseGroup, "resume", display.contentWidth + 500, display.contentHeight - 325, globals.font.regular, 25 )
-    --    --Restart button
-    --    restartbg = display.newImage( pauseGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 250)
-    --    restarttext = display.newText( pauseGroup, "restart", display.contentWidth + 500, display.contentHeight - 250, globals.font.regular, 25 )
-    --    --Restart button
-    --    exitbg = display.newImage( pauseGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 175)
-    --    exittext = display.newText( pauseGroup, "exit", display.contentWidth + 500, display.contentHeight - 175, globals.font.regular, 25 )
-    --    sceneGroup:insert(pauseGroup)
-    
+    sceneGroup:insert(pauseGroup)
+--    --Not functional
+--    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, display.contentWidth - 280, display.contentHeight - 540)
+--    --PAUSED text
+--    pausedText = display.newText( pauseGroup, "PAUSED", display.contentWidth + 500, display.contentHeight - 400, globals.font.regular, 32 )
+--    pausedText:setFillColor(0,0,0)
+--    --Resume button
+--    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 325)
+--    resumetext = display.newText( pauseGroup, "resume", display.contentWidth + 500, display.contentHeight - 325, globals.font.regular, 25 )
+--    --Restart button
+--    restartbg = display.newImage( pauseGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 250)
+--    restarttext = display.newText( pauseGroup, "restart", display.contentWidth + 500, display.contentHeight - 250, globals.font.regular, 25 )
+--    --Restart button
+--    exitbg = display.newImage( pauseGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 175)
+--    exittext = display.newText( pauseGroup, "exit", display.contentWidth + 500, display.contentHeight - 175, globals.font.regular, 25 )
+
     --Dots
     -- Dot order: 
     -- Top left starts as 1, moves horizontally then to the next line.
@@ -161,15 +162,15 @@ function scene:show( event )
             life[i].alpha = 1
         end
         
-        --        pauseButton.alpha = 1
-        --        --Set x to display.contentHeight + 500 for all paused Screen objects
-        --        pausedText.x = display.contentHeight + 500
-        --        resumebg.x = display.contentHeight + 500
-        --        resumetext.x = display.contentHeight + 500
-        --        restartbg.x = display.contentHeight + 500
-        --        restarttext.x = display.contentHeight + 500
-        --        exitbg.x = display.contentHeight + 500
-        --        exittext.x = display.contentHeight + 500
+--        pauseButton.alpha = 1
+--        --Set x to display.contentHeight + 500 for all paused Screen objects
+--        pausedText.x = display.contentHeight + 500
+--        resumebg.x = display.contentHeight + 500
+--        resumetext.x = display.contentHeight + 500
+--        restartbg.x = display.contentHeight + 500
+--        restarttext.x = display.contentHeight + 500
+--        exitbg.x = display.contentHeight + 500
+--        exittext.x = display.contentHeight + 500
 --        for i = 1, globals.settings.numDots do
 --            dot[i].alpha = 1
 --        end
@@ -213,10 +214,10 @@ function scene:show( event )
                     if globals.settings.sound == true then
                         audio.play(fail)
                     end
+                    system.vibrate()
                     numLife = numLife - 1
                     if numLife == 2 or numLife == 1  then
                         transition.to(life[numLife + 1], {time = 250, alpha = 0})
-                        --                        life[numLife + 1] = nil
                         timer.performWithDelay(250, findPattern)
                     elseif numLife == 0 then
                         transition.to(life[1], {time = 250, alpha = 0, onComplete = composer.gotoScene("lost", {effect = "slideLeft"})})
@@ -347,7 +348,7 @@ function scene:show( event )
             end
             transition.to(pausedText, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionResume})
         end
-        --        pauseButton:addEventListener("tap", pauseGame)
+        --pauseButton:addEventListener("tap", pauseGame)
         
     end
 end
@@ -365,28 +366,19 @@ function scene:hide( event )
         saveTable(globals.settings, "settings.json")
         isRunning = true
         timeLeft = 10
-        -- Called when the scene is on screen (but is about to go off screen).
-        -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
     elseif ( phase == "did" ) then
         for i = 1, globals.settings.numDots do
             if dot[i].xScale == 2 and dot[i].yScale == 2 then
                 transition.to(dot[i], {time = globals.flashSpeed, xScale = 1, yScale = 1})
             end
         end
-        
-        -- Called immediately after scene goes off screen.
     end
 end
 
 
 function scene:destroy( event )
-    
     local sceneGroup = self.view
     
-    -- Called prior to the removal of scene's view ("sceneGroup").
-    -- Insert code here to clean up the scene.
-    -- Example: remove display objects, save state, etc.
 end
 
 ---------------------------------------------------------------------------------

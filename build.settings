@@ -38,4 +38,11 @@ settings = {
   	},
 
 	]]--
+        android =
+    {
+        usesPermissions =
+        {
+            "android.permission.VIBRATE",
+        },
+    },
 }
