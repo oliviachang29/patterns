@@ -22,7 +22,7 @@ function scene:create( event )
     --credits text
     local madeByText = display.newText( sceneGroup, "made by", globals.centerX, display.contentHeight - 425, globals.font.regular, 23)
     madeByText:setFillColor(0,0,0)
-    local smallTealButtonText = display.newText( sceneGroup, "Small Teal Button", globals.centerX, display.contentHeight - 400, globals.font.regular, 23)
+    local smallTealButtonText = display.newText( sceneGroup, "Immacul.us", globals.centerX, display.contentHeight - 400, globals.font.regular, 23)
     smallTealButtonText:setFillColor(0,0,0)
     local musicText = display.newText( sceneGroup, "music © Russell ", globals.centerX, display.contentHeight - 350, globals.font.regular, 23)
     musicText:setFillColor(0,0,0)
