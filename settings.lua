@@ -6,37 +6,33 @@ local scene = composer.newScene()
 local json = require("json")
 local globals = require("globals")
 local widget = require("widget")
----------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE
--- unless "composer.removeScene()" is called.
----------------------------------------------------------------------------------
 
 -- local forward references should go here
 local numFlashesText
 local numFlashesSlider
 local colorDot
----------------------------------------------------------------------------------
 
 -- "scene:create()"
 function scene:create( event )
     
     local sceneGroup = self.view
-    local titleText = display.newText( sceneGroup, "SETTINGS", globals.centerX, display.contentHeight - 525, globals.font.regular, 32 )
+    local titleText = display.newText( sceneGroup, "SETTINGS", globals.centerX, 45, globals.font.regular, 32 )
     titleText:setFillColor(0,0,0)
     --Number of Dots
-    local numDotsTitle = display.newText( sceneGroup, "number of dots", display.contentWidth - 220, display.contentHeight - 460, globals.font.regular, 24 )
+    local numDotsTitle = display.newText( sceneGroup, "number of dots", 100, 90, globals.font.regular, 24 )
     numDotsTitle:setFillColor(0,0,0)
+    
     local dotsText= {}
-    dotsText[4] = display.newText( sceneGroup, "4", display.contentWidth - 100, display.contentHeight - 460, globals.font.regular, 24 )
+    dotsText[4] = display.newText( sceneGroup, "4", 220, 90, globals.font.regular, 24 )
     dotsText[4]:setFillColor(0,0,0)
-    dotsText[9] = display.newText( sceneGroup, "9", display.contentWidth - 62, display.contentHeight - 460, globals.font.regular, 24 )
+    dotsText[9] = display.newText( sceneGroup, "9", 258, 90, globals.font.regular, 24 )
     dotsText[9]:setFillColor(0,0,0)
-    dotsText[16] = display.newText( sceneGroup, "16", display.contentWidth - 25, display.contentHeight - 460, globals.font.regular, 24 )
+    dotsText[16] = display.newText( sceneGroup, "16", 295, 90, globals.font.regular, 24 )
     dotsText[16]:setFillColor(0,0,0)
     
     --SELECTED CIRCLE
     local selectedCircle = display.newImage( sceneGroup, "images/tealCircle.png", system.ResourceDirectory)
-    selectedCircle.x, selectedCircle.y = dotsText[globals.settings.numDots].x, display.contentHeight - 460
+    selectedCircle.x, selectedCircle.y = dotsText[globals.settings.numDots].x, 90
     local function moveCircle(event)
         transition.to(selectedCircle, {time = 250, x = event.target.x})
         if event.target == dotsText[4] then
@@ -53,29 +49,36 @@ function scene:create( event )
     dotsText[9]:addEventListener("tap", moveCircle)
     dotsText[16]:addEventListener("tap", moveCircle)
     --    --Number of Flashes
-    local numFlashesTitle = display.newText( sceneGroup, "number of flashes", display.contentWidth - 210, display.contentHeight - 400, globals.font.regular, 24 )
+    local numFlashesTitle = display.newText( sceneGroup, "number of flashes", 114, 140, globals.font.regular, 24 )
     numFlashesTitle:setFillColor(0,0,0)
-    numFlashesText = display.newText( sceneGroup, globals.settings.numFlashes, display.contentWidth - 25, display.contentHeight - 400, globals.font.regular, 24 )
+    numFlashesText = display.newText( sceneGroup, globals.settings.numFlashes, 295, 140, globals.font.regular, 24 )
     numFlashesText:setFillColor(0,0,0)
     
     --Color
-    local colorTitle = display.newText( sceneGroup, "color", display.contentWidth - 280, display.contentHeight - 300, globals.font.regular, 24 )
+    local colorTitle = display.newText( sceneGroup, "color", 43, 220, globals.font.regular, 24 )
     colorTitle:setFillColor(0,0,0)
     
+    local function gotoColor()
+        composer.gotoScene("color", {effect = "slideLeft"})
+    end
+    
+    colorDot = display.newImage( sceneGroup, "images/smallDot/" .. globals.settings.color .. ".png", system.ResourceDirectory, 295, 220)
+    colorDot:addEventListener("tap", gotoColor)
+    
     --Sound
-    local soundTitle = display.newText( sceneGroup, "sound", display.contentWidth - 274, display.contentHeight - 240, globals.font.regular, 24 )
+    local soundTitle = display.newText( sceneGroup, "sound", 49, 280, globals.font.regular, 24 )
     soundTitle:setFillColor(0,0,0)
     
     --Music
-    local musicTitle = display.newText( sceneGroup, "music", display.contentWidth - 276, display.contentHeight - 180, globals.font.regular, 24 )
+    local musicTitle = display.newText( sceneGroup, "music", 47, 340, globals.font.regular, 24 )
     musicTitle:setFillColor(0,0,0)
     
     local function gotoMenu()
         composer.gotoScene("menu", {effect = "slideRight"})
     end
     --Done button
-    local donebg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
-    local doneText = display.newText( sceneGroup, "done", globals.centerX, display.contentHeight - 90, globals.font.regular, 25 )
+    local donebg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, 400)
+    local doneText = display.newText( sceneGroup, "done", globals.centerX, 400, globals.font.regular, 25 )
     donebg:addEventListener("tap", gotoMenu)
     
     local function gotoAbout()
@@ -83,7 +86,7 @@ function scene:create( event )
     end
     
     --Info button
-    local infoButton = display.newImage( sceneGroup, "images/info.png", system.ResourceDirectory, display.contentWidth - 25, display.contentHeight - 25)
+    local infoButton = display.newImage( sceneGroup, "images/info.png", system.ResourceDirectory, 295, 455)
     infoButton:addEventListener("tap", gotoAbout)
 end
 
@@ -94,13 +97,6 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-        local function gotoColor()
-            composer.gotoScene("color", {effect = "slideLeft"})
-        end
-        
-        colorDot = display.newImage( sceneGroup, "images/smallDot/" .. globals.settings.color .. ".png", system.ResourceDirectory, display.contentWidth - 40, display.contentHeight - 300)
-        colorDot:addEventListener("tap", gotoColor)
-        
         --WIDGETS
         -- Slider listener
         local function flashesSliderListener( event )
@@ -147,8 +143,8 @@ function scene:show( event )
         -- Create the widget
         numFlashesSlider = widget.newSlider
         {
-            top = display.contentHeight - 380, --up and down
-            left = display.contentWidth - 305,--side to side
+            top = 155, --up and down
+            left = 7,--side to side
             width = 285,
             value = flashesSliderValue,  -- Start slider at value
             listener = flashesSliderListener
@@ -173,8 +169,8 @@ function scene:show( event )
         -- Create the widget
         local soundSwitch = widget.newSwitch
         {
-            left = display.contentWidth - 70, --side to side
-            top = display.contentHeight - 260,  --up and down
+            left = 260, --side to side
+            top = 260,  --up and down
             id = "soundSwitch",
             onPress = onSoundPress
         }
@@ -213,8 +209,8 @@ function scene:show( event )
         -- Create the widget
         local musicSwitch = widget.newSwitch
         {
-            left = display.contentWidth - 70, --side to side
-            top = display.contentHeight - 200,--up and down
+            left = 260, --side to side
+            top = 320,--up and down
             style = "onOff",
             id = "musicSwitch",
             onPress = onMusicPress

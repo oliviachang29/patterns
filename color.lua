@@ -25,7 +25,7 @@ function scene:create( event )
     --8. Purple
     --9. Green
     local sceneGroup = self.view
-    local titleText = display.newText( sceneGroup, "COLOR", globals.centerX, display.contentHeight - 525, globals.font.regular, 32 )
+    local titleText = display.newText( sceneGroup, "COLOR", globals.centerX, 45, globals.font.regular, 32 )
     titleText:setFillColor(0,0,0)
     local colorDot = {}
     for i = 1, 9 do
@@ -36,19 +36,19 @@ function scene:create( event )
         end
         --Set the x coordinate
         if i == 1  or i == 2 or i == 3 then
-            colorDot[i].x = display.contentWidth - 235
+            colorDot[i].x = 85
         elseif i == 4 or i == 5 or i == 6 then
-            colorDot[i].x = display.contentWidth- 160
+            colorDot[i].x = 160
         elseif i == 7 or i == 8 or i == 9 then
-            colorDot[i].x = display.contentWidth - 85
+            colorDot[i].x = 235
         end
         --Set the y coordinate
         if i == 1  or i == 4 or i == 7 then
-            colorDot[i].y = display.contentHeight - 375
+            colorDot[i].y = 150
         elseif i == 2 or i == 5 or i == 8 then
-            colorDot[i].y = display.contentHeight - 300
+            colorDot[i].y = 225
         elseif i == 3 or i == 6 or i == 9 then
-            colorDot[i].y = display.contentHeight - 225
+            colorDot[i].y = 300
         end
     end
 --    for i = 1, 9 do
@@ -89,8 +89,8 @@ function scene:create( event )
         composer.gotoScene("settings", {effect = "slideRight"})
     end
     --Done button
-    local savebg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
-    local saveText = display.newText( sceneGroup, "save", globals.centerX, display.contentHeight - 90, globals.font.regular, 25 )
+    local savebg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, 400)
+    local saveText = display.newText( sceneGroup, "save", globals.centerX, 400, globals.font.regular, 25 )
     savebg:addEventListener("tap", gotoSettings)
 end
 

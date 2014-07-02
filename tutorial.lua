@@ -17,28 +17,28 @@ function scene:create( event )
     local sceneGroup = self.view
     local ding = audio.loadSound("audio/ding.wav")
     local function scene4()
-        local youGotIt = display.newText( sceneGroup, "You've got it.", globals.centerX, display.contentHeight - 450, globals.font.regular, 23 )
+        local youGotIt = display.newText( sceneGroup, "You've got it.", globals.centerX, 30, globals.font.regular, 23 )
         youGotIt:setFillColor(0,0,0)
-        local readyToPlay = display.newText( sceneGroup, "Ready to play?", globals.centerX, display.contentHeight - 425, globals.font.regular, 23 )
+        local readyToPlay = display.newText( sceneGroup, "Ready to play?", globals.centerX, 55, globals.font.regular, 23 )
         readyToPlay:setFillColor(0,0,0)
-        local yepbg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
-        local yepText = display.newText( sceneGroup, "yep.", globals.centerX, display.contentHeight - 90, globals.font.regular, 23 )
+        local yepbg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, 400)
+        local yepText = display.newText( sceneGroup, "yep.", globals.centerX, 400, globals.font.regular, 23 )
         local function goto()
             if globals.settings.openedBefore == false then
-                composer.gotoScene("menu")
+                composer.gotoScene("menu", {effect = "slideLeft"})
                 globals.settings.openedBefore = true
                 saveTable(globals.settings, "settings.json")
             elseif globals.settings.openedBefore == true then
-                composer.gotoScene("about")
+                composer.gotoScene("about", {effect = "slideRight"})
             end
         end
         yepbg:addEventListener("tap", goto)
     end
     
     local function scene3()
-        local yourTurn = display.newText( sceneGroup, "Your turn:", globals.centerX, display.contentHeight - 475, globals.font.regular, 23 )
-        local pressThoseDots = display.newText( sceneGroup, "Press those dots.", globals.centerX, display.contentHeight - 450, globals.font.regular, 23 )
-        local sameOrder = display.newText( sceneGroup, "in that same order.", globals.centerX, display.contentHeight - 425, globals.font.regular, 23 )
+        local yourTurn = display.newText( sceneGroup, "Your turn:", globals.centerX, 45, globals.font.regular, 23 )
+        local pressThoseDots = display.newText( sceneGroup, "Press the dots", globals.centerX, 70, globals.font.regular, 23 )
+        local sameOrder = display.newText( sceneGroup, "in that same order.", globals.centerX, 95, globals.font.regular, 23 )
         yourTurn:setFillColor(0,0,0)
         pressThoseDots:setFillColor(0,0,0)
         sameOrder:setFillColor(0,0,0)
@@ -47,20 +47,21 @@ function scene:create( event )
         for i = 1, 9 do
             dot[i] = display.newImage("images/smallDot/1.png")
             sceneGroup:insert(dot[i])
+            --Set the x coordinate
             if i == 1  or i == 2 or i == 3 then
-                dot[i].x = display.contentWidth - 235
+                dot[i].x = 85
             elseif i == 4 or i == 5 or i == 6 then
-                dot[i].x = display.contentWidth- 160
+                dot[i].x = 160
             elseif i == 7 or i == 8 or i == 9 then
-                dot[i].x = display.contentWidth - 85
+                dot[i].x = 235
             end
             --Set the y coordinate
             if i == 1  or i == 4 or i == 7 then
-                dot[i].y = display.contentHeight - 350
+                dot[i].y = 150
             elseif i == 2 or i == 5 or i == 8 then
-                dot[i].y = display.contentHeight - 275
+                dot[i].y = 225
             elseif i == 3 or i == 6 or i == 9 then
-                dot[i].y = display.contentHeight - 200
+                dot[i].y = 300
             end
         end
         
@@ -103,26 +104,27 @@ function scene:create( event )
     end
     
     local function scene2()
-        local memorizeText = display.newText( sceneGroup, "Memorize this pattern.", globals.centerX, display.contentHeight - 450, globals.font.regular, 23 )
+        local memorizeText = display.newText( sceneGroup, "Memorize this pattern.", globals.centerX, 90, globals.font.regular, 23 )
         memorizeText:setFillColor(0,0,0)
         local dot = {}
         for i = 1, 9 do
             dot[i] = display.newImage("images/smallDot/1.png")
             sceneGroup:insert(dot[i])
+            --Set the x coordinate
             if i == 1  or i == 2 or i == 3 then
-                dot[i].x = display.contentWidth - 235
+                dot[i].x = 85
             elseif i == 4 or i == 5 or i == 6 then
-                dot[i].x = display.contentWidth- 160
+                dot[i].x = 160
             elseif i == 7 or i == 8 or i == 9 then
-                dot[i].x = display.contentWidth - 85
+                dot[i].x = 235
             end
             --Set the y coordinate
             if i == 1  or i == 4 or i == 7 then
-                dot[i].y = display.contentHeight - 350
+                dot[i].y = 150
             elseif i == 2 or i == 5 or i == 8 then
-                dot[i].y = display.contentHeight - 275
+                dot[i].y = 225
             elseif i == 3 or i == 6 or i == 9 then
-                dot[i].y = display.contentHeight - 200
+                dot[i].y = 300
             end
         end
         
@@ -132,7 +134,6 @@ function scene:create( event )
             audio.play(ding)
             timesFound = timesFound + 1
             local i = timesFound
-            print("Finding dot " .. i .." in pattern")
             pattern[i] = dot[math.random(9)]
             local function removeFlash()
                 transition.to(pattern[i], {time = 250, xScale = 1, yScale = 1})
@@ -141,8 +142,8 @@ function scene:create( event )
         end
         timer.performWithDelay( 750, findPattern, 4 )
         
-        local okbg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
-        local okText = display.newText( sceneGroup, "ok.", globals.centerX, display.contentHeight - 90, globals.font.regular, 23 )
+        local okbg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, 400)
+        local okText = display.newText( sceneGroup, "ok.", globals.centerX, 400, globals.font.regular, 23 )
         local function gotoScene3()
             if timesFound == 4 then
                 for i = 1, 9 do
@@ -160,10 +161,10 @@ function scene:create( event )
     end
     
     local function scene1()
-        local helloThereText = display.newText( sceneGroup, "Hello there.", globals.centerX, display.contentHeight - 450, globals.font.regular, 23 )
+        local helloThereText = display.newText( sceneGroup, "Hello there.", globals.centerX, 90, globals.font.regular, 23 )
         helloThereText:setFillColor(0,0,0)
-        local hibg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
-        local hiText = display.newText( sceneGroup, "hi.", globals.centerX, display.contentHeight - 90, globals.font.regular, 23 )
+        local hibg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, 400)
+        local hiText = display.newText( sceneGroup, "hi.", globals.centerX, 400, globals.font.regular, 23 )
         local function gotoScene2()
             transition.to(helloThereText, {time = 750, x = display.contentWidth - 1000})
             transition.to(hibg, {time = 750, x = display.contentWidth - 1000})

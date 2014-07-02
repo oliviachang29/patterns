@@ -4,48 +4,42 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local globals = require("globals")
----------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE
--- unless "composer.removeScene()" is called.
----------------------------------------------------------------------------------
 
--- local forward references should go here
-
----------------------------------------------------------------------------------
+-- local forward references 
 
 -- "scene:create()"
 function scene:create( event )
     
     local sceneGroup = self.view
-    local titleText = display.newText( sceneGroup, "ABOUT", globals.centerX, display.contentHeight - 525, globals.font.regular, 32 )
+    local titleText = display.newText( sceneGroup, "ABOUT", globals.centerX, 45, globals.font.regular, 32 )
     titleText:setFillColor(0,0,0)
     --credits text
-    local madeByText = display.newText( sceneGroup, "made by", globals.centerX, display.contentHeight - 425, globals.font.regular, 23)
+    local madeByText = display.newText( sceneGroup, "made by", globals.centerX, 95, globals.font.regular, 23)
     madeByText:setFillColor(0,0,0)
-    local smallTealButtonText = display.newText( sceneGroup, "Immacul.us", globals.centerX, display.contentHeight - 400, globals.font.regular, 23)
+    local smallTealButtonText = display.newText( sceneGroup, "Immaculi", globals.centerX, 120, globals.font.regular, 23)
     smallTealButtonText:setFillColor(0,0,0)
-    local musicText = display.newText( sceneGroup, "music © Russell ", globals.centerX, display.contentHeight - 350, globals.font.regular, 23)
+    local musicText = display.newText( sceneGroup, "music © Russell ", globals.centerX, 170, globals.font.regular, 23)
     musicText:setFillColor(0,0,0)
-    local stedmanText = display.newText( sceneGroup, "Stedman 2013", globals.centerX, display.contentHeight - 325, globals.font.regular, 23)
+    local stedmanText = display.newText( sceneGroup, "Stedman 2013", globals.centerX, 195, globals.font.regular, 23)
     stedmanText:setFillColor(0,0,0)
-    local madeByText = display.newText( sceneGroup, "Settings icon designed", globals.centerX, display.contentHeight - 275, globals.font.regular, 23)
+    local madeByText = display.newText( sceneGroup, "Settings icon designed", globals.centerX, 245, globals.font.regular, 23)
     madeByText:setFillColor(0,0,0)
-    local madeByText = display.newText( sceneGroup, "by Joe Mortell", globals.centerX, display.contentHeight - 250, globals.font.regular, 23)
+    local madeByText = display.newText( sceneGroup, "by Joe Mortell", globals.centerX, 270, globals.font.regular, 23)
     madeByText:setFillColor(0,0,0)
 
     --tutorial button
     local function gotoTutorial()
         composer.gotoScene("tutorial", {effect = "slideLeft"})
     end
-    local tutorialbg = display.newImage( sceneGroup, "images/smallPinkButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 150)
-    local tutorialText = display.newText( sceneGroup, "tutorial", globals.centerX, display.contentHeight - 150, globals.font.regular, 25 )
+    local tutorialbg = display.newImage( sceneGroup, "images/smallPinkButton.png", system.ResourceDirectory, globals.centerX, 345)
+    local tutorialText = display.newText( sceneGroup, "tutorial", globals.centerX, 345, globals.font.regular, 25 )
     tutorialbg:addEventListener("tap", gotoTutorial)
     --back button
     local function gotoSettings()
         composer.gotoScene("settings", {effect = "slideRight"})
     end
-    local backbg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 90)
-    local backText = display.newText( sceneGroup, "back", globals.centerX, display.contentHeight - 90, globals.font.regular, 25 )
+    local backbg = display.newImage( sceneGroup, "images/smallTealButton.png", system.ResourceDirectory, globals.centerX, 400)
+    local backText = display.newText( sceneGroup, "back", globals.centerX, 400, globals.font.regular, 25 )
     backbg:addEventListener("tap", gotoSettings)
     
 end

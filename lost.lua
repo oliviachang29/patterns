@@ -17,27 +17,27 @@ function scene:create( event )
     print(globals.score)
    local sceneGroup = self.view
    --Fix placement + spacing
-   local scoreTitle = display.newText( sceneGroup, "score", globals.centerX, display.contentHeight - 500, globals.font.regular, 50 )
+   local scoreTitle = display.newText( sceneGroup, "score", globals.centerX, 40, globals.font.regular, 50 )
    scoreTitle:setFillColor(0,0,0)
-   scoreText = display.newText( sceneGroup, globals.score, globals.centerX, display.contentHeight - 425, globals.font.regular, 50 )
+   scoreText = display.newText( sceneGroup, globals.score, globals.centerX, 115, globals.font.regular, 50 )
    scoreText:setFillColor(0,0,0)
-   local bestScoreTitle = display.newText( sceneGroup, "best score", globals.centerX, display.contentHeight - 350, globals.font.regular, 50)
+   local bestScoreTitle = display.newText( sceneGroup, "best score", globals.centerX, 190, globals.font.regular, 50)
    bestScoreTitle:setFillColor(0,0,0)
-   local bestScoreText = display.newText( sceneGroup, globals.settings.highScore, globals.centerX, display.contentHeight - 275, globals.font.regular, 50 )
+   local bestScoreText = display.newText( sceneGroup, globals.settings.highScore, globals.centerX, 265, globals.font.regular, 50 )
    bestScoreText:setFillColor(0,0,0)
    
-   local playAgainbg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 150)
+   local playAgainbg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, globals.centerX, 365)
     sceneGroup:insert(playAgainbg)
-    local playAgainText = display.newText( sceneGroup, "play again", globals.centerX, display.contentHeight - 150, globals.font.regular, 25 )
+    local playAgainText = display.newText( sceneGroup, "play again", globals.centerX, 365, globals.font.regular, 25 )
     local function gotoGame()
         composer.gotoScene("game", {effect = "slideRight"})
         globals.score = 0
     end
     playAgainbg:addEventListener("tap", gotoGame)
    
-   local exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 80)
+   local exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, globals.centerX, 435)
     sceneGroup:insert(exitbg)
-    local exitText = display.newText( sceneGroup, "exit", globals.centerX, display.contentHeight - 80, globals.font.regular, 25 )
+    local exitText = display.newText( sceneGroup, "exit", globals.centerX, 435, globals.font.regular, 25 )
     local function gotoMenu()
         composer.gotoScene("menu", {effect = "slideRight"})
         globals.score = 0

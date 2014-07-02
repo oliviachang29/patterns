@@ -13,21 +13,18 @@ function scene:create( event )
     local sceneGroup = self.view
     
     --display game title
-    local gameTitle = display.newText( sceneGroup, "patterns", globals.centerX, display.contentHeight - 500, globals.font.regular, 65 )
+    local gameTitle = display.newText( sceneGroup, "patterns", globals.centerX, 50, globals.font.regular, 65 )
     gameTitle.alpha = 0
     gameTitle:setFillColor(0,0,0)
     
     --display playbutton
-    local playbutton = display.newGroup()
-    sceneGroup:insert(playbutton)
-    
-    local playbg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 115)
+    local playbg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, globals.centerX, 365)
     playbg.alpha = 0
-    local playtext = display.newText( sceneGroup, "play", globals.centerX, display.contentHeight - 115, globals.font.regular, 25 )
+    local playtext = display.newText( sceneGroup, "play", globals.centerX, 365, globals.font.regular, 25 )
     playtext.alpha = 0
 
     --display settingsbutton
-    local settingsbutton = display.newImage( sceneGroup, "images/settingsbutton.png", system.ResourceDirectory, globals.centerX, display.contentHeight - 45)
+    local settingsbutton = display.newImage( sceneGroup, "images/settingsbutton.png", system.ResourceDirectory, globals.centerX, 435)
     settingsbutton.alpha = 0
     sceneGroup:insert(settingsbutton)
     

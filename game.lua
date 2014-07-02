@@ -1,5 +1,7 @@
 --Patterns
 --game.lua
+--To enable different dings for each dot, uncomment code starting on lines:
+--173
 
 local composer = require( "composer" )
 local scene = composer.newScene()
@@ -32,19 +34,19 @@ function scene:create( event )
     local sceneGroup = self.view
     --    sceneGroup:insert(pauseGroup)
     --    --Not functional
-    --    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, display.contentWidth - 280, display.contentHeight - 540)
+    --    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, 280, 540)
     --    --PAUSED text
-    --    pausedText = display.newText( pauseGroup, "PAUSED", display.contentWidth + 500, display.contentHeight - 400, globals.font.regular, 32 )
+    --    pausedText = display.newText( pauseGroup, "PAUSED", display.contentWidth + 500, 400, globals.font.regular, 32 )
     --    pausedText:setFillColor(0,0,0)
     --    --Resume button
-    --    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 325)
-    --    resumetext = display.newText( pauseGroup, "resume", display.contentWidth + 500, display.contentHeight - 325, globals.font.regular, 25 )
+    --    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, 325)
+    --    resumetext = display.newText( pauseGroup, "resume", display.contentWidth + 500, 325, globals.font.regular, 25 )
     --    --Restart button
-    --    restartbg = display.newImage( pauseGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 250)
-    --    restarttext = display.newText( pauseGroup, "restart", display.contentWidth + 500, display.contentHeight - 250, globals.font.regular, 25 )
+    --    restartbg = display.newImage( pauseGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, 250)
+    --    restarttext = display.newText( pauseGroup, "restart", display.contentWidth + 500, 250, globals.font.regular, 25 )
     --    --Restart button
-    --    exitbg = display.newImage( pauseGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, display.contentHeight - 175)
-    --    exittext = display.newText( pauseGroup, "exit", display.contentWidth + 500, display.contentHeight - 175, globals.font.regular, 25 )
+    --    exitbg = display.newImage( pauseGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, 175)
+    --    exittext = display.newText( pauseGroup, "exit", display.contentWidth + 500, 175, globals.font.regular, 25 )
     
     --Dots
     -- Dot order: 
@@ -56,55 +58,55 @@ function scene:create( event )
             dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
             --Set the x coordinate
             if i == 1  or i == 4 or i == 7 then
-                dot[i].x = display.contentWidth - 280
+                dot[i].x = 40
             elseif i == 2 or i == 5 or i == 8 then
-                dot[i].x = display.contentWidth-160
+                dot[i].x = 160
             elseif i == 3 or i == 6 or i == 9 then
-                dot[i].x = display.contentWidth - 40
+                dot[i].x = 280
             end
             --Set the y coordinate
             if i == 1  or i == 2 or i == 3 then
-                dot[i].y = display.contentHeight - 380
+                dot[i].y = 160
             elseif i == 4 or i == 5 or i == 6 then
-                dot[i].y = display.contentHeight - 270
+                dot[i].y = 270
             elseif i == 7 or i == 8 or i == 9 then
-                dot[i].y = display.contentHeight - 160
+                dot[i].y = 380
             end
         elseif globals.settings.numDots == 4 then
             dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
             --Set the x coordinate
             if i == 1 or i == 3 then
-                dot[i].x = display.contentWidth - 200
+                dot[i].x = 100
             elseif i == 2 or i == 4 then
-                dot[i].x = display.contentWidth - 100
+                dot[i].x = 200
             end
             --Set the y coordinate
             if i == 1 or i == 2 then
-                dot[i].y = display.contentHeight - 300
+                dot[i].y = 200
             elseif i == 3 or i == 4 then
-                dot[i].y = display.contentHeight - 200
+                dot[i].y = 300
             end
         elseif globals.settings.numDots == 16 then
             dot[i] = display.newImage("images/smallDot/" .. globals.settings.color .. ".png")
             --Set the x coordinate
             if i == 1 or i == 5 or i == 9 or i == 13 then
-                dot[i].x = display.contentWidth - 280
+                dot[i].x = 40
             elseif i == 2 or i == 6 or i == 10 or i == 14 then
-                dot[i].x = display.contentWidth - 200
+                dot[i].x = 120
             elseif i == 3 or i == 7 or i == 11 or i == 15 then
-                dot[i].x = display.contentWidth - 120
+                dot[i].x = 200
             elseif i == 4 or i == 8 or i == 12 or i == 16 then
-                dot[i].x = display.contentWidth - 40
+                dot[i].x = 280
             end
             --Set the y coordinate
             if i == 1 or i == 2 or i == 3 or i == 4 then
-                dot[i].y = display.contentHeight - 380
+                dot[i].y = 140
             elseif i == 5 or i == 6 or i == 7 or i == 8 then
-                dot[i].y = display.contentHeight - 300
+                dot[i].y = 220
             elseif i == 9 or i == 10 or i == 11 or i == 12 then
-                dot[i].y = display.contentHeight - 220
+                dot[i].y = 300
             elseif i == 13 or i == 14 or i == 15 or i == 16 then
-                dot[i].y = display.contentHeight - 140
+                dot[i].y = 380
             end
         end
         sceneGroup:insert(dot[i])
@@ -112,29 +114,29 @@ function scene:create( event )
     
     --Lives
     --Lives order: 1 2 3
-    local livesText = display.newText(sceneGroup, "lives", display.contentWidth - 265, display.contentHeight - 500 , globals.font.regular, 25)
+    local livesText = display.newText(sceneGroup, "lives", 55, 40 , globals.font.regular, 25)
     livesText:setFillColor(0,0,0)
     life = {}
     numLife = 3
     for i = 1, 3 do
         life[i] = display.newImage("images/fullLife.png")
         sceneGroup:insert(life[i])
-        life[i].x = display.contentWidth - (325 - (i * 30))
-        life[i].y = display.contentHeight - 465
+        life[i].x = i * 30
+        life[i].y = 70
     end
     
     --Time (A means above)
-    local timeA = display.newText(sceneGroup, "time", display.contentWidth - 160, display.contentHeight - 500, globals.font.regular, 25)
+    local timeA = display.newText(sceneGroup, "time", 160, 40, globals.font.regular, 25)
     timeA:setFillColor(0,0,0)
     timeLeft = 10
-    timeText = display.newText(sceneGroup, timeLeft, display.contentWidth - 160, display.contentHeight - 465, globals.font.regular, 25)
+    timeText = display.newText(sceneGroup, timeLeft, 160, 70, globals.font.regular, 25)
     timeText:setFillColor(0,0,0)
     
     --Score (A means above)
-    local scoreA = display.newText(sceneGroup, "score", display.contentWidth - 55, display.contentHeight - 500, globals.font.regular, 25)
+    local scoreA = display.newText(sceneGroup, "score", 265, 40, globals.font.regular, 25)
     scoreA:setFillColor(0,0,0)
     globals.score = 0
-    scoreText = display.newText(sceneGroup, globals.score, display.contentWidth - 55, display.contentHeight - 465, globals.font.regular, 25)
+    scoreText = display.newText(sceneGroup, globals.score, 265, 70, globals.font.regular, 25)
     scoreText:setFillColor(0,0,0)
 end
 
@@ -168,7 +170,10 @@ function scene:show( event )
         --        end
         timeLeft = 10
         ding = audio.loadSound("audio/ding.wav")
-        ding2 = audio.loadSound("audio/ding2.wav")
+--        ding = {}
+--        for i = 1, 16 do
+--            ding[i] = audio.loadSound("audio/dings/" .. i .. ".mp3")
+--        end
         success = audio.loadSound("audio/success.wav")
         fail = audio.loadSound("audio/fail.wav")
         audio.setVolume(0.8)
@@ -207,8 +212,8 @@ function scene:show( event )
                 else
                     if globals.settings.sound == true then
                         audio.play(fail)
+                        system.vibrate()
                     end
-                    system.vibrate()
                     numLife = numLife - 1
                     if numLife == 2 or numLife == 1  then
                         transition.to(life[numLife + 1], {time = 250, alpha = 0})
