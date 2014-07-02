@@ -194,8 +194,8 @@ function scene:show( event )
             local switch = event.target
             if switch.isOn == true then
                 globals.music = GGMusic:new()
-                globals.music:add( "audio/track1.mp3" )
-                globals.music:add( "audio/track1.mp3" )
+                globals.music:add( "audio/music/track1.mp3" )
+                globals.music:add( "audio/music/track2.mp3" )
                 globals.music:setVolume( 0.6 )
                 globals.music.random = true
                 globals.settings.music = true
@@ -228,7 +228,7 @@ function scene:show( event )
         end
         sceneGroup:insert(musicSwitch)
     elseif ( phase == "did" ) then
-        
+        composer.returnTo = "menu"
     end
 end
 

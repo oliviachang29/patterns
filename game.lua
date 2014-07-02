@@ -30,7 +30,7 @@ local exittext
 
 function scene:create( event )
     local sceneGroup = self.view
---    sceneGroup:insert(pauseGroup)
+    --    sceneGroup:insert(pauseGroup)
     --    --Not functional
     --    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, display.contentWidth - 280, display.contentHeight - 540)
     --    --PAUSED text
@@ -107,270 +107,271 @@ function scene:create( event )
                 dot[i].y = display.contentHeight - 140
             end
         end
-    sceneGroup:insert(dot[i])
-end
-
---Lives
---Lives order: 1 2 3
-local livesText = display.newText(sceneGroup, "lives", display.contentWidth - 265, display.contentHeight - 500 , globals.font.regular, 25)
-livesText:setFillColor(0,0,0)
-life = {}
-numLife = 3
-for i = 1, 3 do
-    life[i] = display.newImage("images/fullLife.png")
-    sceneGroup:insert(life[i])
-    life[i].x = display.contentWidth - (325 - (i * 30))
-    life[i].y = display.contentHeight - 465
-end
-
---Time (A means above)
-local timeA = display.newText(sceneGroup, "time", display.contentWidth - 160, display.contentHeight - 500, globals.font.regular, 25)
-timeA:setFillColor(0,0,0)
-timeLeft = 10
-timeText = display.newText(sceneGroup, timeLeft, display.contentWidth - 160, display.contentHeight - 465, globals.font.regular, 25)
-timeText:setFillColor(0,0,0)
-
---Score (A means above)
-local scoreA = display.newText(sceneGroup, "score", display.contentWidth - 55, display.contentHeight - 500, globals.font.regular, 25)
-scoreA:setFillColor(0,0,0)
-globals.score = 0
-scoreText = display.newText(sceneGroup, globals.score, display.contentWidth - 55, display.contentHeight - 465, globals.font.regular, 25)
-scoreText:setFillColor(0,0,0)
+        sceneGroup:insert(dot[i])
+    end
+    
+    --Lives
+    --Lives order: 1 2 3
+    local livesText = display.newText(sceneGroup, "lives", display.contentWidth - 265, display.contentHeight - 500 , globals.font.regular, 25)
+    livesText:setFillColor(0,0,0)
+    life = {}
+    numLife = 3
+    for i = 1, 3 do
+        life[i] = display.newImage("images/fullLife.png")
+        sceneGroup:insert(life[i])
+        life[i].x = display.contentWidth - (325 - (i * 30))
+        life[i].y = display.contentHeight - 465
+    end
+    
+    --Time (A means above)
+    local timeA = display.newText(sceneGroup, "time", display.contentWidth - 160, display.contentHeight - 500, globals.font.regular, 25)
+    timeA:setFillColor(0,0,0)
+    timeLeft = 10
+    timeText = display.newText(sceneGroup, timeLeft, display.contentWidth - 160, display.contentHeight - 465, globals.font.regular, 25)
+    timeText:setFillColor(0,0,0)
+    
+    --Score (A means above)
+    local scoreA = display.newText(sceneGroup, "score", display.contentWidth - 55, display.contentHeight - 500, globals.font.regular, 25)
+    scoreA:setFillColor(0,0,0)
+    globals.score = 0
+    scoreText = display.newText(sceneGroup, globals.score, display.contentWidth - 55, display.contentHeight - 465, globals.font.regular, 25)
+    scoreText:setFillColor(0,0,0)
 end
 
 
 function scene:show( event )
-
-local sceneGroup = self.view
-local phase = event.phase
-local pauseGroup = display.newGroup()
-sceneGroup:insert(pauseGroup)
-if ( phase == "will" ) then
-    globals.score = 0
-    scoreText.text = globals.score
-    isRunning = true
-    numLife = 3
-    for i = 1, 3 do
-        life[i].alpha = 1
-    end
     
-    --        pauseButton.alpha = 1
-    --        --Set x to display.contentHeight + 500 for all paused Screen objects
-    --        pausedText.x = display.contentHeight + 500
-    --        resumebg.x = display.contentHeight + 500
-    --        resumetext.x = display.contentHeight + 500
-    --        restartbg.x = display.contentHeight + 500
-    --        restarttext.x = display.contentHeight + 500
-    --        exitbg.x = display.contentHeight + 500
-    --        exittext.x = display.contentHeight + 500
-    --        for i = 1, globals.settings.numDots do
-    --            dot[i].alpha = 1
-    --        end
-    timeLeft = 10
-    ding = audio.loadSound("audio/ding.wav")
-    ding2 = audio.loadSound("audio/ding2.wav")
-    success = audio.loadSound("audio/success.wav")
-    fail = audio.loadSound("audio/fail.wav")
-    audio.setVolume(0.8)
-    timeLeft = 10
-elseif ( phase == "did" ) then
-    local findPattern
-    local pattern
-    local userPattern
-    local timerHandler
-    local isRunning = true
-    
-    local function checkPattern()
-        if isRunning == true then
-            if globals.flashSpeed >= 40 then
-                globals.flashSpeed = globals.flashSpeed - 4
-            end
-            timer.cancel(timerHandler)
-            timeLeft = 10
-            timeText.text = timeLeft
-            --Check Pattern
-            local numCorrect = 0
-            for i = 1, #userPattern do
-                if userPattern[i] == pattern[i] then
-                    numCorrect = numCorrect + 1
-                end
-            end
-            if numCorrect == globals.settings.numFlashes then
-                if globals.settings.sound == true then
-                    audio.play(success)
-                end
-                globals.score = globals.score + 1
-                scoreText.text = globals.score
-                timer.performWithDelay(250, findPattern)
-            else
-                if globals.settings.sound == true then
-                    audio.play(fail)
-                end
-                system.vibrate()
-                numLife = numLife - 1
-                if numLife == 2 or numLife == 1  then
-                    transition.to(life[numLife + 1], {time = 250, alpha = 0})
-                    timer.performWithDelay(250, findPattern)
-                elseif numLife == 0 then
-                    transition.to(life[1], {time = 250, alpha = 0, onComplete = composer.gotoScene("lost", {effect = "slideLeft"})})
-                    timer.cancel(timerHandler)
-                end
-                print("User lost a life. Current number of lives: " .. numLife)
-            end
-            pattern = nil
-            userPattern = nil
-            numCorrect = nil
+    local sceneGroup = self.view
+    local phase = event.phase
+    local pauseGroup = display.newGroup()
+    sceneGroup:insert(pauseGroup)
+    if ( phase == "will" ) then
+        globals.score = 0
+        scoreText.text = globals.score
+        isRunning = true
+        numLife = 3
+        for i = 1, 3 do
+            life[i].alpha = 1
         end
-    end
-    
-    local function enterPattern()
-        if isRunning == true then
-            if timeText == nil then
-                print("ERROR: timeText is nil - User in userDotCopy about to select dots")
-                return
-            end
-            local function timeCount()
-                timeLeft = timeLeft -1
+        
+        --        pauseButton.alpha = 1
+        --        --Set x to display.contentHeight + 500 for all paused Screen objects
+        --        pausedText.x = display.contentHeight + 500
+        --        resumebg.x = display.contentHeight + 500
+        --        resumetext.x = display.contentHeight + 500
+        --        restartbg.x = display.contentHeight + 500
+        --        restarttext.x = display.contentHeight + 500
+        --        exitbg.x = display.contentHeight + 500
+        --        exittext.x = display.contentHeight + 500
+        --        for i = 1, globals.settings.numDots do
+        --            dot[i].alpha = 1
+        --        end
+        timeLeft = 10
+        ding = audio.loadSound("audio/ding.wav")
+        ding2 = audio.loadSound("audio/ding2.wav")
+        success = audio.loadSound("audio/success.wav")
+        fail = audio.loadSound("audio/fail.wav")
+        audio.setVolume(0.8)
+        timeLeft = 10
+    elseif ( phase == "did" ) then
+        composer.returnTo = "menu"
+        
+        local findPattern
+        local pattern
+        local userPattern
+        local timerHandler
+        local isRunning = true
+        
+        local function checkPattern()
+            if isRunning == true then
+                if globals.flashSpeed >= 40 then
+                    globals.flashSpeed = globals.flashSpeed - 4
+                end
+                timer.cancel(timerHandler)
+                timeLeft = 10
                 timeText.text = timeLeft
-                if timeLeft == 0 then
-                    checkPattern()
-                    print("Time is 0. Checking pattern.")
+                --Check Pattern
+                local numCorrect = 0
+                for i = 1, #userPattern do
+                    if userPattern[i] == pattern[i] then
+                        numCorrect = numCorrect + 1
+                    end
                 end
-            end
-            timerHandler =  timer.performWithDelay(1000, timeCount, 10)
-            
-            local timesEntered = 0
-            userPattern = {}
-            local function userEnter()
-                timesEntered = timesEntered + 1
-                i = timesEntered
-                local function onTouch(event)
+                if numCorrect == globals.settings.numFlashes then
                     if globals.settings.sound == true then
-                        audio.play(ding)
+                        audio.play(success)
                     end
-                    userPattern[i] = event.target
-                    local function removeFlash(obj)
-                        if i == globals.settings.numFlashes then
-                            checkPattern()
-                        else
-                            userEnter()
-                        end
-                        transition.to(obj, {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfEnteredTimes})
+                    globals.score = globals.score + 1
+                    scoreText.text = globals.score
+                    timer.performWithDelay(250, findPattern)
+                else
+                    if globals.settings.sound == true then
+                        audio.play(fail)
                     end
-                    transition.to(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
-                    for i = 1, globals.settings.numDots do
-                        dot[i]:removeEventListener("touch", onTouch)
+                    system.vibrate()
+                    numLife = numLife - 1
+                    if numLife == 2 or numLife == 1  then
+                        transition.to(life[numLife + 1], {time = 250, alpha = 0})
+                        timer.performWithDelay(250, findPattern)
+                    elseif numLife == 0 then
+                        transition.to(life[1], {time = 250, alpha = 0, onComplete = composer.gotoScene("lost", {effect = "slideLeft"})})
+                        timer.cancel(timerHandler)
                     end
+                    print("User lost a life. Current number of lives: " .. numLife)
                 end
-                for i = 1, globals.settings.numDots do
-                    dot[i]:addEventListener("touch", onTouch)
-                end
+                pattern = nil
+                userPattern = nil
+                numCorrect = nil
             end
-            userEnter()
         end
-    end
-    
-    --Find pattern
-    findPattern = function()
-        if isRunning == true then
-            time = 10
-            globals.flashSpeed = 280
-            --find the four random dots
-            math.randomseed(os.time())
-            pattern = {}
-            local timesFound = 0
-            
-            local function findPattern()
-                if isRunning == true then
-                    if globals.settings.sound == true then
-                        audio.play(ding)
-                    end
-                    timesFound = timesFound + 1
-                    local i = timesFound
-                    pattern[i] = dot[math.random(globals.settings.numDots)]
-                    local function checkIfFoundTimes()
-                        if i == globals.settings.numFlashes then
-                            enterPattern()
-                        end
-                    end
-                    local function removeFlash()
-                        transition.to(pattern[i], {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
-                    end
-                    transition.to(pattern[i], {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+        
+        local function enterPattern()
+            if isRunning == true then
+                if timeText == nil then
+                    print("ERROR: timeText is nil - User in userDotCopy about to select dots")
+                    return
                 end
+                local function timeCount()
+                    timeLeft = timeLeft -1
+                    timeText.text = timeLeft
+                    if timeLeft == 0 then
+                        checkPattern()
+                        print("Time is 0. Checking pattern.")
+                    end
+                end
+                timerHandler =  timer.performWithDelay(1000, timeCount, 10)
                 
-            end
-            timer.performWithDelay( 500, findPattern, globals.settings.numFlashes )
-        end
-    end
-    
-    --Start sequence
-    findPattern()
-    
-    local function pauseGame()
-        isRunning = false
-        transition.pause()
-        audio.pause(0)
-        if timerHandler ~= nil then
-            timer.pause(timerHandler)
-        end
-        transition.to(pauseButton, {time = 150, alpha = 0})
-        for i = 1, globals.settings.numDots do
-            transition.to(dot[i], {time = 150, alpha = 0})
-        end
-        local function gotoMenu()
-            transition:cancel()
-            audio:stop()
-            pauseGroup = nil
-            composer.gotoScene("menu", {effect = "slideRight"})
-        end
-        exitbg:addEventListener("tap", gotoMenu)
-        --Transition
-        local function transitionResume()
-            local function transitionRestart()
-                local function transitionExit()
-                    transition.to(exitbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
-                    transition.to(exittext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
+                local timesEntered = 0
+                userPattern = {}
+                local function userEnter()
+                    timesEntered = timesEntered + 1
+                    i = timesEntered
+                    local function onTouch(event)
+                        if globals.settings.sound == true then
+                            audio.play(ding)
+                        end
+                        userPattern[i] = event.target
+                        local function removeFlash(obj)
+                            if i == globals.settings.numFlashes then
+                                checkPattern()
+                            else
+                                userEnter()
+                            end
+                            transition.to(obj, {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfEnteredTimes})
+                        end
+                        transition.to(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        for i = 1, globals.settings.numDots do
+                            dot[i]:removeEventListener("touch", onTouch)
+                        end
+                    end
+                    for i = 1, globals.settings.numDots do
+                        dot[i]:addEventListener("touch", onTouch)
+                    end
                 end
-                transition.to(restartbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
-                transition.to(restarttext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
+                userEnter()
             end
-            transition.to(resumebg, {time = 250, transition = easing.inQuad, x = globals.centerX})
-            transition.to(resumetext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionRestart})
         end
-        transition.to(pausedText, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionResume})
+        
+        --Find pattern
+        findPattern = function()
+            if isRunning == true then
+                time = 10
+                globals.flashSpeed = 280
+                --find the four random dots
+                math.randomseed(os.time())
+                pattern = {}
+                local timesFound = 0
+                
+                local function findPattern()
+                    if isRunning == true then
+                        if globals.settings.sound == true then
+                            audio.play(ding)
+                        end
+                        timesFound = timesFound + 1
+                        local i = timesFound
+                        pattern[i] = dot[math.random(globals.settings.numDots)]
+                        local function checkIfFoundTimes()
+                            if i == globals.settings.numFlashes then
+                                enterPattern()
+                            end
+                        end
+                        local function removeFlash()
+                            transition.to(pattern[i], {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
+                        end
+                        transition.to(pattern[i], {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                    end
+                    
+                end
+                timer.performWithDelay( 500, findPattern, globals.settings.numFlashes )
+            end
+        end
+        
+        --Start sequence
+        findPattern()
+        
+        local function pauseGame()
+            isRunning = false
+            transition.pause()
+            audio.pause(0)
+            if timerHandler ~= nil then
+                timer.pause(timerHandler)
+            end
+            transition.to(pauseButton, {time = 150, alpha = 0})
+            for i = 1, globals.settings.numDots do
+                transition.to(dot[i], {time = 150, alpha = 0})
+            end
+            local function gotoMenu()
+                transition:cancel()
+                audio:stop()
+                pauseGroup = nil
+                composer.gotoScene("menu", {effect = "slideRight"})
+            end
+            exitbg:addEventListener("tap", gotoMenu)
+            --Transition
+            local function transitionResume()
+                local function transitionRestart()
+                    local function transitionExit()
+                        transition.to(exitbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
+                        transition.to(exittext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
+                    end
+                    transition.to(restartbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
+                    transition.to(restarttext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
+                end
+                transition.to(resumebg, {time = 250, transition = easing.inQuad, x = globals.centerX})
+                transition.to(resumetext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionRestart})
+            end
+            transition.to(pausedText, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionResume})
+        end
+        --pauseButton:addEventListener("tap", pauseGame)
+        
     end
-    --pauseButton:addEventListener("tap", pauseGame)
-    
-end
 end
 
 
 function scene:hide( event )
-
-local sceneGroup = self.view
-local phase = event.phase
-
-if ( phase == "will" ) then
-    if globals.score > globals.settings.highScore then
-        globals.settings.highScore = globals.score
-    end
-    saveTable(globals.settings, "settings.json")
-    isRunning = true
-    timeLeft = 10
-elseif ( phase == "did" ) then
-    for i = 1, globals.settings.numDots do
-        if dot[i].xScale == 2 and dot[i].yScale == 2 then
-            transition.to(dot[i], {time = globals.flashSpeed, xScale = 1, yScale = 1})
+    
+    local sceneGroup = self.view
+    local phase = event.phase
+    
+    if ( phase == "will" ) then
+        if globals.score > globals.settings.highScore then
+            globals.settings.highScore = globals.score
+        end
+        saveTable(globals.settings, "settings.json")
+        isRunning = true
+        timeLeft = 10
+    elseif ( phase == "did" ) then
+        for i = 1, globals.settings.numDots do
+            if dot[i].xScale == 2 and dot[i].yScale == 2 then
+                transition.to(dot[i], {time = globals.flashSpeed, xScale = 1, yScale = 1})
+            end
         end
     end
-end
 end
 
 
 function scene:destroy( event )
-local sceneGroup = self.view
-
+    local sceneGroup = self.view
 end
 
 ---------------------------------------------------------------------------------

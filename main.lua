@@ -39,12 +39,60 @@ end
 if globals.settings.music == true then
     local GGMusic = require( "GGMusic" )
     globals.music = GGMusic:new()
-    globals.music:add( "audio/track1.mp3" )
-    globals.music:add( "audio/track1.mp3" )
+    globals.music:add( "audio/music/track1.mp3" )
+    globals.music:add( "audio/music/track2.mp3" )
     globals.music:setVolume( 0.6 )
     globals.music:play()
     globals.music.random = true
 end
+
+local function onKeyEvent( event )
+
+   local phase = event.phase
+   local keyName = event.keyName
+   print( event.phase, event.keyName )
+
+   if ( "back" == keyName and phase == "up" ) then
+      if ( composer.currentScene == "splash" ) then
+         native.requestExit()
+      else
+         if ( composer.isOverlay ) then
+            composer.hideOverlay()
+         else
+            local lastScene = composer.returnTo
+            print( "previous scene", lastScene )
+            if ( lastScene ) then
+               composer.gotoScene( lastScene, { effect="crossFade", time=500 } )
+            else
+               native.requestExit()
+            end
+         end
+      end
+   end
+
+   if ( keyName == "volumeUp" and phase == "down" ) then
+      local masterVolume = audio.getVolume()
+      print( "volume:", masterVolume )
+      if ( masterVolume < 1.0 ) then
+         masterVolume = masterVolume + 0.1
+         audio.setVolume( masterVolume )
+      end
+      return true
+   elseif ( keyName == "volumeDown" and phase == "down" ) then
+      local masterVolume = audio.getVolume()
+      print( "volume:", masterVolume )
+      if ( masterVolume > 0.0 ) then
+         masterVolume = masterVolume - 0.1
+         audio.setVolume( masterVolume )
+      end
+      return true
+   end
+   return false  --SEE NOTE BELOW
+end
+
+--add the key callback
+Runtime:addEventListener( "key", onKeyEvent )
+
 
 if globals.settings.openedBefore == false then
     composer.gotoScene("tutorial")
