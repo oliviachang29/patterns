@@ -110,6 +110,7 @@ function scene:create( event )
             end
         end
         sceneGroup:insert(dot[i])
+        dot[i].id = i
     end
     
     --Lives
@@ -169,11 +170,11 @@ function scene:show( event )
         --            dot[i].alpha = 1
         --        end
         timeLeft = 10
-        ding = audio.loadSound("audio/ding.wav")
---        ding = {}
---        for i = 1, 16 do
---            ding[i] = audio.loadSound("audio/dings/" .. i .. ".mp3")
---        end
+--        ding = audio.loadSound("audio/ding.wav")
+        ding = {}
+        for i = 1, 16 do
+            ding[i] = audio.loadSound("audio/ding/" .. i .. ".mp3")
+        end
         success = audio.loadSound("audio/success.wav")
         fail = audio.loadSound("audio/fail.wav")
         audio.setVolume(0.8)
@@ -253,7 +254,7 @@ function scene:show( event )
                     i = timesEntered
                     local function onTouch(event)
                         if globals.settings.sound == true then
-                            audio.play(ding)
+                            audio.play(ding[event.target.id])
                         end
                         userPattern[i] = event.target
                         local function removeFlash(obj)
@@ -262,7 +263,7 @@ function scene:show( event )
                             else
                                 userEnter()
                             end
-                            transition.to(obj, {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfEnteredTimes})
+                            transition.to(obj, {time = globals.flashSpeed, xScale = 1, yScale = 1})
                         end
                         transition.to(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                         for i = 1, globals.settings.numDots do
@@ -289,12 +290,13 @@ function scene:show( event )
                 
                 local function findPattern()
                     if isRunning == true then
-                        if globals.settings.sound == true then
-                            audio.play(ding)
-                        end
                         timesFound = timesFound + 1
                         local i = timesFound
-                        pattern[i] = dot[math.random(globals.settings.numDots)]
+                        local currentDot = math.random(globals.settings.numDots)
+                        pattern[i] = dot[currentDot]
+                        if globals.settings.sound == true then
+                            audio.play(ding[currentDot])
+                        end
                         local function checkIfFoundTimes()
                             if i == globals.settings.numFlashes then
                                 enterPattern()

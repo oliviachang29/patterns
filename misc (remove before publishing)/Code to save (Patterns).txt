@@ -1,6 +1,0 @@
-Code to save 
-
-local timeTitle = display.newText( sceneGroup, "time", display.contentWidth - 280, display.contentHeight - 325, globals.font.regular, 24 )
-timeTitle:setFillColor(0,0,0)
-timeText = display.newText( sceneGroup, globals.time .. "seconds", display.contentWidth - 25, display.contentHeight - 325, globals.font.regular, 24 )
-timeText:setFillColor(0,0,0)

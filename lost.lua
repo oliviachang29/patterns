@@ -55,6 +55,7 @@ function scene:show( event )
        scoreText.text = globals.score
       -- Called when the scene is still off screen (but is about to come on screen).
    elseif ( phase == "did" ) then
+       composer.returnTo = "menu"
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
