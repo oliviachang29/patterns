@@ -1,11 +1,9 @@
 --Patterns
 --game.lua
---To enable different dings for each dot, uncomment code starting on lines:
---173
-
 local composer = require( "composer" )
 local scene = composer.newScene()
 local globals = require("globals")
+local tnt = require("tnt")
 
 -- local forward references should go here
 local dot
@@ -14,33 +12,23 @@ local timeLeft
 local timeText
 local life
 local numLife
-local pauseButton
 local ding
-local ding2
 local success
 local fail
-local pausedText
 local resumebg
 local resumetext
-local restartbg
-local restarttext
-local exitbg
-local exittext
---local pauseGroup = display.newGroup()
-
---local pauseGroup = display.newGroup()
+local pauseGroup = display.newGroup()
 
 function scene:create( event )
     local sceneGroup = self.view
-    --    sceneGroup:insert(pauseGroup)
-    --    --Not functional
-    --    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, 280, 540)
+    sceneGroup:insert(pauseGroup)
+    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, 40, 20)
     --    --PAUSED text
     --    pausedText = display.newText( pauseGroup, "PAUSED", display.contentWidth + 500, 400, globals.font.regular, 32 )
     --    pausedText:setFillColor(0,0,0)
-    --    --Resume button
-    --    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, display.contentWidth + 500, 325)
-    --    resumetext = display.newText( pauseGroup, "resume", display.contentWidth + 500, 325, globals.font.regular, 25 )
+    --Resume button
+    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, 1000, 175)
+    resumetext = display.newText( pauseGroup, "resume", 1000, 175, globals.font.regular, 25 )
     --    --Restart button
     --    restartbg = display.newImage( pauseGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, 250)
     --    restarttext = display.newText( pauseGroup, "restart", display.contentWidth + 500, 250, globals.font.regular, 25 )
@@ -66,11 +54,11 @@ function scene:create( event )
             end
             --Set the y coordinate
             if i == 1  or i == 2 or i == 3 then
-                dot[i].y = 160
+                dot[i].y = 180
             elseif i == 4 or i == 5 or i == 6 then
-                dot[i].y = 270
+                dot[i].y = 290
             elseif i == 7 or i == 8 or i == 9 then
-                dot[i].y = 380
+                dot[i].y = 400
             end
         elseif globals.settings.numDots == 4 then
             dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
@@ -82,9 +70,9 @@ function scene:create( event )
             end
             --Set the y coordinate
             if i == 1 or i == 2 then
-                dot[i].y = 200
+                dot[i].y = 220
             elseif i == 3 or i == 4 then
-                dot[i].y = 300
+                dot[i].y = 320
             end
         elseif globals.settings.numDots == 16 then
             dot[i] = display.newImage("images/smallDot/" .. globals.settings.color .. ".png")
@@ -100,13 +88,13 @@ function scene:create( event )
             end
             --Set the y coordinate
             if i == 1 or i == 2 or i == 3 or i == 4 then
-                dot[i].y = 140
+                dot[i].y = 160
             elseif i == 5 or i == 6 or i == 7 or i == 8 then
-                dot[i].y = 220
+                dot[i].y = 240
             elseif i == 9 or i == 10 or i == 11 or i == 12 then
-                dot[i].y = 300
+                dot[i].y = 320
             elseif i == 13 or i == 14 or i == 15 or i == 16 then
-                dot[i].y = 380
+                dot[i].y = 400
             end
         end
         sceneGroup:insert(dot[i])
@@ -115,7 +103,7 @@ function scene:create( event )
     
     --Lives
     --Lives order: 1 2 3
-    local livesText = display.newText(sceneGroup, "lives", 55, 40 , globals.font.regular, 25)
+    local livesText = display.newText(sceneGroup, "lives", 55, 60 , globals.font.regular, 25)
     livesText:setFillColor(0,0,0)
     life = {}
     numLife = 3
@@ -123,21 +111,21 @@ function scene:create( event )
         life[i] = display.newImage("images/fullLife.png")
         sceneGroup:insert(life[i])
         life[i].x = i * 30
-        life[i].y = 70
+        life[i].y = 90
     end
     
     --Time (A means above)
-    local timeA = display.newText(sceneGroup, "time", 160, 40, globals.font.regular, 25)
+    local timeA = display.newText(sceneGroup, "time", 160, 60, globals.font.regular, 25)
     timeA:setFillColor(0,0,0)
     timeLeft = 10
-    timeText = display.newText(sceneGroup, timeLeft, 160, 70, globals.font.regular, 25)
+    timeText = display.newText(sceneGroup, timeLeft, 160, 90, globals.font.regular, 25)
     timeText:setFillColor(0,0,0)
     
     --Score (A means above)
-    local scoreA = display.newText(sceneGroup, "score", 265, 40, globals.font.regular, 25)
+    local scoreA = display.newText(sceneGroup, "score", 265, 60, globals.font.regular, 25)
     scoreA:setFillColor(0,0,0)
     globals.score = 0
-    scoreText = display.newText(sceneGroup, globals.score, 265, 70, globals.font.regular, 25)
+    scoreText = display.newText(sceneGroup, globals.score, 265, 90, globals.font.regular, 25)
     scoreText:setFillColor(0,0,0)
 end
 
@@ -148,6 +136,9 @@ function scene:show( event )
     local phase = event.phase
     local pauseGroup = display.newGroup()
     sceneGroup:insert(pauseGroup)
+    
+    
+    
     if ( phase == "will" ) then
         globals.score = 0
         scoreText.text = globals.score
@@ -156,21 +147,8 @@ function scene:show( event )
         for i = 1, 3 do
             life[i].alpha = 1
         end
-        
-        --        pauseButton.alpha = 1
-        --        --Set x to display.contentHeight + 500 for all paused Screen objects
-        --        pausedText.x = display.contentHeight + 500
-        --        resumebg.x = display.contentHeight + 500
-        --        resumetext.x = display.contentHeight + 500
-        --        restartbg.x = display.contentHeight + 500
-        --        restarttext.x = display.contentHeight + 500
-        --        exitbg.x = display.contentHeight + 500
-        --        exittext.x = display.contentHeight + 500
-        --        for i = 1, globals.settings.numDots do
-        --            dot[i].alpha = 1
-        --        end
         timeLeft = 10
---        ding = audio.loadSound("audio/ding.wav")
+        --Load Sounds
         ding = {}
         for i = 1, 16 do
             ding[i] = audio.loadSound("audio/ding/" .. i .. ".mp3")
@@ -190,8 +168,8 @@ function scene:show( event )
         
         local function checkPattern()
             if isRunning == true then
-                if globals.flashSpeed >= 40 then
-                    globals.flashSpeed = globals.flashSpeed - 4
+                if globals.flashSpeed >= 42 then
+                    globals.flashSpeed = globals.flashSpeed - 6
                 end
                 timer.cancel(timerHandler)
                 timeLeft = 10
@@ -228,6 +206,7 @@ function scene:show( event )
                 pattern = nil
                 userPattern = nil
                 numCorrect = nil
+                timerHandler = nil
             end
         end
         
@@ -263,9 +242,9 @@ function scene:show( event )
                             else
                                 userEnter()
                             end
-                            transition.to(obj, {time = globals.flashSpeed, xScale = 1, yScale = 1})
+                            tnt:newTransition(obj, {time = globals.flashSpeed, xScale = 1, yScale = 1})
                         end
-                        transition.to(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        tnt:newTransition(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                         for i = 1, globals.settings.numDots do
                             dot[i]:removeEventListener("touch", onTouch)
                         end
@@ -303,9 +282,9 @@ function scene:show( event )
                             end
                         end
                         local function removeFlash()
-                            transition.to(pattern[i], {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
+                            tnt:newTransition(pattern[i], {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
                         end
-                        transition.to(pattern[i], {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        tnt:newTransition(pattern[i], {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                     end
                     
                 end
@@ -318,8 +297,8 @@ function scene:show( event )
         
         local function pauseGame()
             isRunning = false
-            transition.pause()
-            audio.pause(0)
+            tnt:pauseAllTransitions()
+--            audio.pause(0)
             if timerHandler ~= nil then
                 timer.pause(timerHandler)
             end
@@ -327,30 +306,25 @@ function scene:show( event )
             for i = 1, globals.settings.numDots do
                 transition.to(dot[i], {time = 150, alpha = 0})
             end
-            local function gotoMenu()
-                transition:cancel()
-                audio:stop()
-                pauseGroup = nil
-                composer.gotoScene("menu", {effect = "slideRight"})
-            end
-            exitbg:addEventListener("tap", gotoMenu)
-            --Transition
-            local function transitionResume()
-                local function transitionRestart()
-                    local function transitionExit()
-                        transition.to(exitbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
-                        transition.to(exittext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
-                    end
-                    transition.to(restartbg, {time = 250, transition = easing.inQuad, x = globals.centerX})
-                    transition.to(restarttext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionExit})
+            transition.to(resumebg, {time = 250, transition = easing.inQuad, x = globals.centerX})
+            transition.to(resumetext, {time = 250, transition = easing.inQuad, x = globals.centerX})
+            local function resumeGame()
+                isRunning = true    
+--                audio.resume(0)
+                if timerHandler ~= nil then
+                    timer.resume(timerHandler)
                 end
-                transition.to(resumebg, {time = 250, transition = easing.inQuad, x = globals.centerX})
-                transition.to(resumetext, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionRestart})
+                transition.to(pauseButton, {time = 150, alpha = 1})
+                for i = 1, globals.settings.numDots do
+                    transition.to(dot[i], {time = 150, alpha = 1})
+                end
+                transition.to(resumebg, {time = 250, transition = easing.inQuad, x = 1000})
+                transition.to(resumetext, {time = 250, transition = easing.inQuad, x = 1000})
+                tnt:resumeAllTransitions()
             end
-            transition.to(pausedText, {time = 250, transition = easing.inQuad, x = globals.centerX, onComplete = transitionResume})
+            resumebg:addEventListener("tap", resumeGame)
         end
-        --pauseButton:addEventListener("tap", pauseGame)
-        
+        pauseButton:addEventListener("tap", pauseGame)
     end
 end
 

@@ -1,5 +1,0 @@
-Main Menu <-- Game
-Main Menu <-- Settings <-- About <-- Tutorial
-
-If never opened before,
-Main Menu<-- Tutorial

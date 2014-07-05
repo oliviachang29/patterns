@@ -144,7 +144,7 @@ function scene:show( event )
         numFlashesSlider = widget.newSlider
         {
             top = 155, --up and down
-            left = 7,--side to side
+            left = 20,--side to side
             width = 285,
             value = flashesSliderValue,  -- Start slider at value
             listener = flashesSliderListener
@@ -169,7 +169,7 @@ function scene:show( event )
         -- Create the widget
         local soundSwitch = widget.newSwitch
         {
-            left = 260, --side to side
+            left = 240, --side to side
             top = 260,  --up and down
             id = "soundSwitch",
             onPress = onSoundPress
@@ -209,7 +209,7 @@ function scene:show( event )
         -- Create the widget
         local musicSwitch = widget.newSwitch
         {
-            left = 260, --side to side
+            left = 240, --side to side
             top = 320,--up and down
             style = "onOff",
             id = "musicSwitch",

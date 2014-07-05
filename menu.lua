@@ -6,6 +6,7 @@ local scene = composer.newScene()
 local globals = require("globals")
 
 -- local forward references should go here
+local playbg
 
 -- "scene:create()"
 function scene:create( event )
@@ -13,35 +14,26 @@ function scene:create( event )
     local sceneGroup = self.view
     
     --display game title
-    local gameTitle = display.newText( sceneGroup, "patterns", globals.centerX, 50, globals.font.regular, 65 )
-    gameTitle.alpha = 0
+    local gameTitle = display.newText( sceneGroup, "patterns", globals.centerX, -300, globals.font.regular, 65 )
     gameTitle:setFillColor(0,0,0)
     
     --display playbutton
-    local playbg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, globals.centerX, 365)
-    playbg.alpha = 0
-    local playtext = display.newText( sceneGroup, "play", globals.centerX, 365, globals.font.regular, 25 )
-    playtext.alpha = 0
-
+    playbg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, globals.centerX, 800)
+    local playtext = display.newText( sceneGroup, "play", globals.centerX, 850, globals.font.regular, 25 )
+    
     --display settingsbutton
-    local settingsbutton = display.newImage( sceneGroup, "images/settingsbutton.png", system.ResourceDirectory, globals.centerX, 435)
-    settingsbutton.alpha = 0
+    local settingsbutton = display.newImage( sceneGroup, "images/settingsbutton.png", system.ResourceDirectory, globals.centerX, 900)
     sceneGroup:insert(settingsbutton)
     
     --Appear into screen
-    transition.to(gameTitle,{time = 1000 , alpha = 1 })
-    transition.to(playbg, {time = 1200, alpha = 1})
-    transition.to(playtext, {time = 1200, alpha = 1})
-    transition.to(settingsbutton, {time = 1400, alpha = 1})
-    
-    local function gotoGame()
-        composer.gotoScene("game", {effect = "slideLeft"})
-    end
+    transition.to(gameTitle,{time = 1000 , y = 50 })
+    transition.to(playbg, {time = 1200, y = 365})
+    transition.to(playtext, {time = 1200, y = 365})
+    transition.to(settingsbutton, {time = 1400, y = 435})
     local function gotoSettings()
         composer.gotoScene("settings", {effect = "slideLeft"})
     end
     --Add listeners
-    playbg:addEventListener("tap", gotoGame)
     settingsbutton:addEventListener("tap", gotoSettings)
 end
 
@@ -52,12 +44,14 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-        -- Called when the scene is still off screen (but is about to come on screen).
+        local function gotoGame()
+            composer.gotoScene("game", {effect = "slideLeft"})
+            playbg:removeEventListener("tap", gotoGame)
+        end
+        playbg:addEventListener("tap", gotoGame)
     elseif ( phase == "did" ) then
         composer.returnTo = nil
-        -- Called when the scene is now on screen.
-        -- Insert code here to make the scene come alive.
-        -- Example: start timers, begin animation, play audio, etc.
+        
     end
 end
 
@@ -68,11 +62,9 @@ function scene:hide( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-        -- Called when the scene is on screen (but is about to go off screen).
-        -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
+        
     elseif ( phase == "did" ) then
-        -- Called immediately after scene goes off screen.
+        
     end
 end
 
@@ -81,9 +73,6 @@ function scene:destroy( event )
     
     local sceneGroup = self.view
     
-    -- Called prior to the removal of scene's view ("sceneGroup").
-    -- Insert code here to clean up the scene.
-    -- Example: remove display objects, save state, etc.
 end
 
 ---------------------------------------------------------------------------------

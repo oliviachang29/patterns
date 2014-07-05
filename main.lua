@@ -10,27 +10,23 @@ display.screenOriginY,
 display.pixelWidth, 
 display.pixelHeight)
 background.x, background.y = display.contentCenterX,  display.contentCenterY
-background:setFillColor(250/255, 250/255, 250/255) --238/255
+background:setFillColor(0/2555, 134/255, 131/255)
 background:toBack()
---local background = display.newImage("background.png")
---background.x, background.y = display.contentCenterX,  display.contentCenterY
---background:toBack()
 
 --Require
 local json = require("json")
 local composer = require("composer")
-
-
 local globals = require("globals")
+
 globals.settings = loadTable("settings.json")
 if globals.settings == nil then
     globals.settings = {}
     globals.settings.highScore = 0
     --Settings
-    globals.settings.numDots =  9 --Number of Dots, default 9
-    globals.settings.numFlashes = 4 --Number of Flashes in a Pattern, default 4
-    globals.settings.music = true --Music on/off, default true
-    globals.settings.sound = true --Sound on/off, default true
+    globals.settings.numDots =  9
+    globals.settings.numFlashes = 4
+    globals.settings.music = true
+    globals.settings.sound = true 
     globals.settings.color = 1
     globals.settings.openedBefore = false
 end
@@ -58,6 +54,15 @@ local function onKeyEvent( event )
             if ( composer.isOverlay ) then
                 composer.hideOverlay()
             else
+                if (composer.currentScene == "game") then
+                    globals.score = 0
+                    timeLeft = 10
+                    numLife = 3
+                    isRunning = false
+                    if timerHandler ~= nil then
+                        timer.cancel(timerHandler)
+                    end
+                end
                 local lastScene = composer.returnTo
                 if ( lastScene ) then
                     composer.gotoScene( lastScene, { effect="slideRight"} )
@@ -73,10 +78,24 @@ end
 
 Runtime:addEventListener( "key", onKeyEvent )
 
-
-if globals.settings.openedBefore == false then
-    composer.gotoScene("tutorial")
-    
-elseif globals.settings.openedBefore == true then
-    composer.gotoScene("menu")
+--Splash Screen
+local function splashScreen()
+    local dragonImage = display.newImage( "images/dragon.png", system.ResourceDirectory, globals.centerX, globals.centerY - 25)
+    local companyText = display.newText( "IMMACULI", globals.centerX, 365, globals.font.regular, 35 )
+    local function removeSplashScreen()
+        transition.to(dragonImage, {time = 500, alpha = 0})
+        transition.to(companyText, {time = 500, alpha = 0})
+        local function gotoScene()
+            background:setFillColor(250/255, 250/255, 250/255)
+            if globals.settings.openedBefore == false then
+                composer.gotoScene("tutorial")
+            elseif globals.settings.openedBefore == true then
+                composer.gotoScene("menu")
+            end
+        end
+        timer.performWithDelay( 500, gotoScene)
+    end
+    timer.performWithDelay( 1500, removeSplashScreen)
 end
+
+splashScreen()

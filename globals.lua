@@ -4,6 +4,7 @@
 local globals = {}
 --Constants
 globals.centerX = display.contentCenterX
+globals.centerY = display.contentCenterY
 
 --Fonts
 globals.font = 
