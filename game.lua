@@ -22,13 +22,14 @@ local pauseGroup = display.newGroup()
 function scene:create( event )
     local sceneGroup = self.view
     sceneGroup:insert(pauseGroup)
-    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, 40, 20)
+--    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, 40, 20)
+--    --Resume button
+--    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, 1000, 175)
+--    resumetext = display.newText( pauseGroup, "resume", 1000, 175, globals.font.regular, 25 )
+    
     --    --PAUSED text
     --    pausedText = display.newText( pauseGroup, "PAUSED", display.contentWidth + 500, 400, globals.font.regular, 32 )
     --    pausedText:setFillColor(0,0,0)
-    --Resume button
-    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, 1000, 175)
-    resumetext = display.newText( pauseGroup, "resume", 1000, 175, globals.font.regular, 25 )
     --    --Restart button
     --    restartbg = display.newImage( pauseGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, 250)
     --    restarttext = display.newText( pauseGroup, "restart", display.contentWidth + 500, 250, globals.font.regular, 25 )
@@ -158,19 +159,23 @@ function scene:show( event )
         audio.setVolume(0.8)
         timeLeft = 10
     elseif ( phase == "did" ) then
-        composer.returnTo = "menu"
-        
+--        composer.returnTo = "menu"
+        composer.returnTo = nil
         local findPattern
         local pattern
         local userPattern
         local timerHandler
         local isRunning = true
+        local currentFunction
+        local flashSpeed = 280
         
         local function checkPattern()
+            currentFunction = "checkPattern"
             if isRunning == true then
-                if globals.flashSpeed >= 42 then
-                    globals.flashSpeed = globals.flashSpeed - 6
+                if flashSpeed >= 40 then
+                    flashSpeed = flashSpeed - 4
                 end
+                print("flashSpeed = " .. flashSpeed)
                 timer.cancel(timerHandler)
                 timeLeft = 10
                 timeText.text = timeLeft
@@ -187,7 +192,7 @@ function scene:show( event )
                     end
                     globals.score = globals.score + 1
                     scoreText.text = globals.score
-                    timer.performWithDelay(250, findPattern)
+                    timer.performWithDelay(750, findPattern)
                 else
                     if globals.settings.sound == true then
                         audio.play(fail)
@@ -196,7 +201,7 @@ function scene:show( event )
                     numLife = numLife - 1
                     if numLife == 2 or numLife == 1  then
                         transition.to(life[numLife + 1], {time = 250, alpha = 0})
-                        timer.performWithDelay(250, findPattern)
+                        timer.performWithDelay(750, findPattern)
                     elseif numLife == 0 then
                         transition.to(life[1], {time = 250, alpha = 0, onComplete = composer.gotoScene("lost", {effect = "slideLeft"})})
                         timer.cancel(timerHandler)
@@ -211,6 +216,7 @@ function scene:show( event )
         end
         
         local function enterPattern()
+            currentFunction = "enterPattern"
             if isRunning == true then
                 if timeText == nil then
                     print("ERROR: timeText is nil - User in userDotCopy about to select dots")
@@ -242,9 +248,9 @@ function scene:show( event )
                             else
                                 userEnter()
                             end
-                            tnt:newTransition(obj, {time = globals.flashSpeed, xScale = 1, yScale = 1})
+                            tnt:newTransition(obj, {time = flashSpeed, xScale = 1, yScale = 1})
                         end
-                        tnt:newTransition(event.target, {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        tnt:newTransition(event.target, {time = flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                         for i = 1, globals.settings.numDots do
                             dot[i]:removeEventListener("touch", onTouch)
                         end
@@ -261,16 +267,15 @@ function scene:show( event )
         findPattern = function()
             if isRunning == true then
                 time = 10
-                globals.flashSpeed = 280
-                --find the four random dots
                 math.randomseed(os.time())
                 pattern = {}
                 local timesFound = 0
                 
-                local function findPattern()
+                local function findDot()
                     if isRunning == true then
                         timesFound = timesFound + 1
                         local i = timesFound
+                        print(tostring(i))
                         local currentDot = math.random(globals.settings.numDots)
                         pattern[i] = dot[currentDot]
                         if globals.settings.sound == true then
@@ -279,16 +284,18 @@ function scene:show( event )
                         local function checkIfFoundTimes()
                             if i == globals.settings.numFlashes then
                                 enterPattern()
+                            else
+                                findDot()
                             end
                         end
                         local function removeFlash()
-                            tnt:newTransition(pattern[i], {time = globals.flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
+                            tnt:newTransition(pattern[i], {time = flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
                         end
-                        tnt:newTransition(pattern[i], {time = globals.flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        currentFunction = "findPattern"
+                        tnt:newTransition(pattern[i], {time = flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                     end
-                    
                 end
-                timer.performWithDelay( 500, findPattern, globals.settings.numFlashes )
+                findDot()
             end
         end
         
@@ -321,10 +328,13 @@ function scene:show( event )
                 transition.to(resumebg, {time = 250, transition = easing.inQuad, x = 1000})
                 transition.to(resumetext, {time = 250, transition = easing.inQuad, x = 1000})
                 tnt:resumeAllTransitions()
+--                if currentFunction == "checkPattern" then
+--                    findPattern()
+--                end
             end
             resumebg:addEventListener("tap", resumeGame)
         end
-        pauseButton:addEventListener("tap", pauseGame)
+        --pauseButton:addEventListener("tap", pauseGame)
     end
 end
 
@@ -344,7 +354,7 @@ function scene:hide( event )
     elseif ( phase == "did" ) then
         for i = 1, globals.settings.numDots do
             if dot[i].xScale == 2 and dot[i].yScale == 2 then
-                transition.to(dot[i], {time = globals.flashSpeed, xScale = 1, yScale = 1})
+                transition.to(dot[i], {time = flashSpeed, xScale = 1, yScale = 1})
             end
         end
     end

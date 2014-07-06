@@ -39,11 +39,20 @@ settings = {
   	},
 
 	]]--
+        plugins =
+    {
+        ["CoronaProvider.ads.admob"] =
+        {
+            publisherId = "com.coronalabs"
+        },
+    },
         android =
     {
         usesPermissions =
         {
             "android.permission.VIBRATE",
+            "android.permission.INTERNET",
+            "android.permission.ACCESS_NETWORK_STATE",
         },
     },
 }

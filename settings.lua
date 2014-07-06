@@ -169,7 +169,7 @@ function scene:show( event )
         -- Create the widget
         local soundSwitch = widget.newSwitch
         {
-            left = 240, --side to side
+            left = 180, --side to side
             top = 260,  --up and down
             id = "soundSwitch",
             onPress = onSoundPress
@@ -209,7 +209,7 @@ function scene:show( event )
         -- Create the widget
         local musicSwitch = widget.newSwitch
         {
-            left = 240, --side to side
+            left = 180, --side to side
             top = 320,--up and down
             style = "onOff",
             id = "musicSwitch",
