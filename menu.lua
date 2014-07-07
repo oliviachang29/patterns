@@ -4,6 +4,7 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local globals = require("globals")
+--local ads = require "ads" --Corona's ads library
 
 -- local forward references should go here
 local playbg
@@ -33,8 +34,13 @@ function scene:create( event )
     local function gotoSettings()
         composer.gotoScene("settings", {effect = "slideLeft"})
     end
+    local function gotoGame()
+        composer.gotoScene("game", {effect = "slideLeft"})
+        playbg:removeEventListener("tap", gotoGame)
+    end
     --Add listeners
     settingsbutton:addEventListener("tap", gotoSettings)
+    playbg:addEventListener("tap", gotoGame)
 end
 
 -- "scene:show()"
@@ -44,11 +50,15 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-        local function gotoGame()
-            composer.gotoScene("game", {effect = "slideLeft"})
-            playbg:removeEventListener("tap", gotoGame)
-        end
-        playbg:addEventListener("tap", gotoGame)
+--        --Ads
+--        local function adListener(event)
+--            print("event.isError = " .. tostring(event.isError))
+--        end
+--        
+--        ads.init( "admob", "Patterns", adListener ) --Initialize the ads
+--        
+--        -- start with banner ad
+--        ads.show( "banner", { x=0, y=0, interval = 50} ) --Show ads
     elseif ( phase == "did" ) then
         composer.returnTo = nil
         
@@ -64,7 +74,7 @@ function scene:hide( event )
     if ( phase == "will" ) then
         
     elseif ( phase == "did" ) then
-        
+--        ads.hide()
     end
 end
 

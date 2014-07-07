@@ -137,9 +137,7 @@ function scene:show( event )
     local phase = event.phase
     local pauseGroup = display.newGroup()
     sceneGroup:insert(pauseGroup)
-    
-    
-    
+
     if ( phase == "will" ) then
         globals.score = 0
         scoreText.text = globals.score
@@ -172,8 +170,8 @@ function scene:show( event )
         local function checkPattern()
             currentFunction = "checkPattern"
             if isRunning == true then
-                if flashSpeed >= 40 then
-                    flashSpeed = flashSpeed - 4
+                if flashSpeed >= 30 then
+                    flashSpeed = flashSpeed - 5
                 end
                 print("flashSpeed = " .. flashSpeed)
                 timer.cancel(timerHandler)
@@ -248,9 +246,9 @@ function scene:show( event )
                             else
                                 userEnter()
                             end
-                            tnt:newTransition(obj, {time = flashSpeed, xScale = 1, yScale = 1})
+                            tnt:newTransition(obj, {time = 280, xScale = 1, yScale = 1})
                         end
-                        tnt:newTransition(event.target, {time = flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        tnt:newTransition(event.target, {time = 280, xScale = 2, yScale = 2, onComplete = removeFlash})
                         for i = 1, globals.settings.numDots do
                             dot[i]:removeEventListener("touch", onTouch)
                         end
