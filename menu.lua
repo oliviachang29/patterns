@@ -4,7 +4,7 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local globals = require("globals")
---local ads = require "ads" --Corona's ads library
+local ads = require "ads" --Corona's ads library
 
 -- local forward references should go here
 local playbg
@@ -50,15 +50,27 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
---        --Ads
---        local function adListener(event)
---            print("event.isError = " .. tostring(event.isError))
---        end
---        
---        ads.init( "admob", "Patterns", adListener ) --Initialize the ads
---        
---        -- start with banner ad
---        ads.show( "banner", { x=0, y=0, interval = 50} ) --Show ads
+        --Ads
+        local ads = require "ads" --Corona's ads library
+        
+        local function adListener(event)
+            print("event.isError = " .. tostring(event.isError))
+        end
+        
+        ads.init( "admob", "Patterns", adListener ) --Initialize the ads
+        
+        -- initial variables
+        local sysModel = system.getInfo("model")
+        local sysEnv = system.getInfo("environment")
+        
+        -- if on simulator, let user know they must build for device
+        if sysEnv == "simulator" then
+            print( "Please build for device or Xcode simulator to test this sample.")
+        else
+            -- start with banner ad
+            ads.show( "banner", { x=0, y=0, interval = 50} ) --Show ads
+        end
+        
     elseif ( phase == "did" ) then
         composer.returnTo = nil
         

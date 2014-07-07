@@ -53,26 +53,6 @@ function scene:show( event )
     
     if ( phase == "will" ) then
         scoreText.text = globals.score
---        --Ads
---        local ads = require "ads" --Corona's ads library
---        
---        local function adListener(event)
---            print("event.isError = " .. tostring(event.isError))
---        end
---        
---        ads.init( "admob", "Patterns", adListener ) --Initialize the ads
---        
---        -- initial variables
---        local sysModel = system.getInfo("model")
---        local sysEnv = system.getInfo("environment")
---        
---        -- if on simulator, let user know they must build for device
---        if sysEnv == "simulator" then
---            print( "Please build for device or Xcode simulator to test this sample.")
---        else
---            -- start with banner ad
---            ads.show( "banner", { x=0, y=0, interval = 50} ) --Show ads
---        end
         
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
