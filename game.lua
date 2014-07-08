@@ -273,7 +273,6 @@ function scene:show( event )
                     if isRunning == true then
                         timesFound = timesFound + 1
                         local i = timesFound
-                        print(tostring(i))
                         local currentDot = math.random(globals.settings.numDots)
                         pattern[i] = dot[currentDot]
                         if globals.settings.sound == true then

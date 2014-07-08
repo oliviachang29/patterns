@@ -78,10 +78,18 @@ end
 
 Runtime:addEventListener( "key", onKeyEvent )
 
+--Ads
+local ads = require "ads"
+local function adListener(event)
+    print("event.isError = " .. tostring(event.isError))
+    globals.adsError = event.isError
+end
+
+ads.init( "admob", "ca-app-pub-8528469529929882/6097073250", adListener ) --Initialize the ads
+
 --Splash Screen
 local function splashScreen()
-    local dragonImage = display.newImage( "images/dragon.png", system.ResourceDirectory, globals.centerX, globals.centerY - 25)
-    local companyText = display.newText( "IMMACULI", globals.centerX, 365, globals.font.regular, 35 )
+    local companyText = display.newText( "Kttlecorn", globals.centerX, globals.centerY, globals.font.regular, 35 )
     local function removeSplashScreen()
         transition.to(dragonImage, {time = 500, alpha = 0})
         transition.to(companyText, {time = 500, alpha = 0})

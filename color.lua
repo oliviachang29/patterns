@@ -31,6 +31,7 @@ function scene:create( event )
     for i = 1, 9 do
         colorDot[i] = display.newImage( sceneGroup, "images/smallDot/" .. i .. ".png")
         colorDot[i].alpha = 0.35
+        colorDot[i].id = i
         if i == globals.settings.color then
             transition.to(colorDot[i], {time = 200, alpha = 1})
         end
@@ -57,25 +58,7 @@ function scene:create( event )
             colorDot[i].alpha = 0.35
         end
         transition.to(event.target, {time = 225, alpha = 1})
-        if event.target == colorDot[1] then
-            globals.settings.color = 1
-        elseif event.target == colorDot[2] then
-            globals.settings.color = 2
-        elseif event.target == colorDot[3] then
-            globals.settings.color = 3
-        elseif event.target == colorDot[4] then
-            globals.settings.color = 4
-        elseif event.target == colorDot[5] then
-            globals.settings.color = 5
-        elseif event.target == colorDot[6] then
-            globals.settings.color = 6
-        elseif event.target == colorDot[7] then
-            globals.settings.color = 7
-        elseif event.target == colorDot[8] then
-            globals.settings.color = 8
-        elseif event.target == colorDot[9] then
-            globals.settings.color = 9
-        end
+        globals.settings.color = event.target.id
         print("globals.settings.color is " .. globals.settings.color)
         saveTable(globals.settings, "settings.json")
     end

@@ -16,7 +16,7 @@ function scene:create( event )
     --credits text
     local madeByText = display.newText( sceneGroup, "Version: 1.0", globals.centerX, 80, globals.font.regular, 17)
     madeByText:setFillColor(0,0,0)
-    local smallTealButtonText = display.newText( sceneGroup, "© 2014 Immaculi", globals.centerX, 120, globals.font.regular, 23)
+    local smallTealButtonText = display.newText( sceneGroup, "© 2014 Kttlecorn", globals.centerX, 120, globals.font.regular, 23)
     smallTealButtonText:setFillColor(0,0,0)
     local musicText = display.newText( sceneGroup, "music: © 2014 ", globals.centerX, 170, globals.font.regular, 23)
     musicText:setFillColor(0,0,0)

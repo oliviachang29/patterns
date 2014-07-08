@@ -32,15 +32,16 @@ function scene:create( event )
     transition.to(playtext, {time = 1200, y = 365})
     transition.to(settingsbutton, {time = 1400, y = 435})
     local function gotoSettings()
-        composer.gotoScene("settings", {effect = "slideLeft"})
+        composer.gotoScene("settings", {effect = "slideLeft"}) 
+        settingsbutton:removeEventListener("touch", gotoSettings)
     end
     local function gotoGame()
-        composer.gotoScene("game", {effect = "slideLeft"})
-        playbg:removeEventListener("tap", gotoGame)
+        composer.gotoScene("game", {effect = "slideLeft"}) 
+        playbg:removeEventListener("touch", gotoGame)
     end
     --Add listeners
-    settingsbutton:addEventListener("tap", gotoSettings)
-    playbg:addEventListener("tap", gotoGame)
+    settingsbutton:addEventListener("touch", gotoSettings)
+    playbg:addEventListener("touch", gotoGame)
 end
 
 -- "scene:show()"
@@ -50,26 +51,7 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-        --Ads
-        local ads = require "ads" --Corona's ads library
-        
-        local function adListener(event)
-            print("event.isError = " .. tostring(event.isError))
-        end
-        
-        ads.init( "admob", "Patterns", adListener ) --Initialize the ads
-        
-        -- initial variables
-        local sysModel = system.getInfo("model")
-        local sysEnv = system.getInfo("environment")
-        
-        -- if on simulator, let user know they must build for device
-        if sysEnv == "simulator" then
-            print( "Please build for device or Xcode simulator to test this sample.")
-        else
-            -- start with banner ad
-            ads.show( "banner", { x=0, y=0, interval = 50} ) --Show ads
-        end
+       
         
     elseif ( phase == "did" ) then
         composer.returnTo = nil
@@ -86,7 +68,7 @@ function scene:hide( event )
     if ( phase == "will" ) then
         
     elseif ( phase == "did" ) then
---        ads.hide()
+        
     end
 end
 
