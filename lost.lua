@@ -25,13 +25,13 @@ function scene:create( event )
     end
     --globals.score = 0
     --Score
-    local scoreTitle = display.newText( sceneGroup, "score", globals.centerX, 40, globals.font.regular, 40 )
+    local scoreTitle = display.newText( sceneGroup, "score", globals.centerX, 60, globals.font.regular, 40 )
     scoreTitle:setFillColor(0,0,0)
-    scoreText = display.newText( sceneGroup, globals.score, globals.centerX, 115, globals.font.regular, 40 )
+    scoreText = display.newText( sceneGroup, globals.score, globals.centerX, 135, globals.font.regular, 40 )
     scoreText:setFillColor(0,0,0)
-    local bestScoreTitle = display.newText( sceneGroup, "best score", globals.centerX, 190, globals.font.regular, 40)
+    local bestScoreTitle = display.newText( sceneGroup, "best score", globals.centerX, 210, globals.font.regular, 40)
     bestScoreTitle:setFillColor(0,0,0)
-    local bestScoreText = display.newText( sceneGroup, globals.settings.highScore, globals.centerX, 265, globals.font.regular, 40 )
+    local bestScoreText = display.newText( sceneGroup, globals.settings.highScore, globals.centerX, 285, globals.font.regular, 40 )
     bestScoreText:setFillColor(0,0,0)
     --Buttons
     local playAgainbg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, globals.centerX, 365)
@@ -46,14 +46,6 @@ function scene:create( event )
     end
     playAgainbg:addEventListener("tap", goto)
     exitbg:addEventListener("tap", goto)
-    
-    if globals.adsError == false then
-        print("Ads error is false")
-        scoreTitle.y = scoreTitle.y + 50
-        scoreText.y = scoreText.y + 50
-        bestScoreTitle.y = bestScoreTitle.y + 50
-        bestScoreText.y = bestScoreText.y + 50
-    end
 end
 
 -- "scene:show()"

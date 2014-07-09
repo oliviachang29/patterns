@@ -58,13 +58,6 @@ function scene:create( event )
     local colorTitle = display.newText( sceneGroup, "color", 43, 220, globals.font.regular, 24 )
     colorTitle:setFillColor(0,0,0)
     
-    local function gotoColor()
-        composer.gotoScene("color", {effect = "slideLeft"})
-    end
-    
-    colorDot = display.newImage( sceneGroup, "images/smallDot/" .. globals.settings.color .. ".png", system.ResourceDirectory, 295, 220)
-    colorDot:addEventListener("tap", gotoColor)
-    
     --Sound
     local soundTitle = display.newText( sceneGroup, "sound", 49, 280, globals.font.regular, 24 )
     soundTitle:setFillColor(0,0,0)
@@ -97,10 +90,17 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
+        --Color dot
+        local function gotoColor()
+            composer.gotoScene("color", {effect = "slideLeft"})
+        end
+        
+        colorDot = display.newImage( sceneGroup, "images/smallDot/" .. globals.settings.color .. ".png", system.ResourceDirectory, 295, 220)
+        colorDot:addEventListener("tap", gotoColor)
+        
         --WIDGETS
         -- Slider listener
         local function flashesSliderListener( event )
-            print("Flashes slider  is at " .. event.value .. "%")
             sliderPercent = event.value
             if ( 81<= sliderPercent) then
                 if (sliderPercent <= 100) then
@@ -128,6 +128,7 @@ function scene:show( event )
                     numFlashesText.text = "3"
                 end
             end
+            print("globals.settings.numFlashes = " .. globals.settings.numFlashes)
             saveTable(globals.settings, "settings.json")
         end
         local flashesSliderValue = 0

@@ -33,7 +33,6 @@ function scene:create( event )
     transition.to(settingsbutton, {time = 1400, y = 435})
     local function gotoSettings()
         composer.gotoScene("settings", {effect = "slideLeft"}) 
-        settingsbutton:removeEventListener("touch", gotoSettings)
     end
     local function gotoGame()
         composer.gotoScene("game", {effect = "slideLeft"}) 

@@ -22,10 +22,10 @@ local pauseGroup = display.newGroup()
 function scene:create( event )
     local sceneGroup = self.view
     sceneGroup:insert(pauseGroup)
---    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, 40, 20)
---    --Resume button
---    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, 1000, 175)
---    resumetext = display.newText( pauseGroup, "resume", 1000, 175, globals.font.regular, 25 )
+    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, 40, 20)
+    --Resume button
+    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, 1000, 175)
+    resumetext = display.newText( pauseGroup, "resume", 1000, 175, globals.font.regular, 25 )
     
     --    --PAUSED text
     --    pausedText = display.newText( pauseGroup, "PAUSED", display.contentWidth + 500, 400, globals.font.regular, 32 )
@@ -173,7 +173,6 @@ function scene:show( event )
                 if flashSpeed >= 30 then
                     flashSpeed = flashSpeed - 5
                 end
-                print("flashSpeed = " .. flashSpeed)
                 timer.cancel(timerHandler)
                 timeLeft = 10
                 timeText.text = timeLeft
@@ -246,9 +245,9 @@ function scene:show( event )
                             else
                                 userEnter()
                             end
-                            tnt:newTransition(obj, {time = 280, xScale = 1, yScale = 1})
+                            transition.to(obj, {time = flashSpeed, xScale = 1, yScale = 1})
                         end
-                        tnt:newTransition(event.target, {time = 280, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        transition.to(event.target, {time = flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                         for i = 1, globals.settings.numDots do
                             dot[i]:removeEventListener("touch", onTouch)
                         end
@@ -263,6 +262,7 @@ function scene:show( event )
         
         --Find pattern
         findPattern = function()
+            currentFunction = "findPattern"
             if isRunning == true then
                 time = 10
                 math.randomseed(os.time())
@@ -286,10 +286,9 @@ function scene:show( event )
                             end
                         end
                         local function removeFlash()
-                            tnt:newTransition(pattern[i], {time = flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
+                            transition.to(pattern[i], {time = flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
                         end
-                        currentFunction = "findPattern"
-                        tnt:newTransition(pattern[i], {time = flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        transition.to(pattern[i], {time = flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
                     end
                 end
                 findDot()
@@ -301,7 +300,8 @@ function scene:show( event )
         
         local function pauseGame()
             isRunning = false
-            tnt:pauseAllTransitions()
+--            tnt:pauseAllTransitions()
+            transition.pause()
 --            audio.pause(0)
             if timerHandler ~= nil then
                 timer.pause(timerHandler)
@@ -313,8 +313,7 @@ function scene:show( event )
             transition.to(resumebg, {time = 250, transition = easing.inQuad, x = globals.centerX})
             transition.to(resumetext, {time = 250, transition = easing.inQuad, x = globals.centerX})
             local function resumeGame()
-                isRunning = true    
---                audio.resume(0)
+                isRunning = true
                 if timerHandler ~= nil then
                     timer.resume(timerHandler)
                 end
@@ -324,14 +323,15 @@ function scene:show( event )
                 end
                 transition.to(resumebg, {time = 250, transition = easing.inQuad, x = 1000})
                 transition.to(resumetext, {time = 250, transition = easing.inQuad, x = 1000})
-                tnt:resumeAllTransitions()
---                if currentFunction == "checkPattern" then
---                    findPattern()
---                end
+--                tnt:resumeAllTransitions()
+                transition.resume()
+                if currentFunction == "checkPattern" then
+                    findPattern()
+                end
             end
             resumebg:addEventListener("tap", resumeGame)
         end
-        --pauseButton:addEventListener("tap", pauseGame)
+        pauseButton:addEventListener("tap", pauseGame)
     end
 end
 
