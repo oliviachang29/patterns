@@ -16,26 +16,25 @@ local success
 local fail
 local resumebg
 local resumetext
-local pauseGroup = display.newGroup()
-
+local restartbg
+local restarttext
 function scene:create( event )
     local sceneGroup = self.view
     --Pausing
-    sceneGroup:insert(pauseGroup)
-    pauseButton = display.newImage( pauseGroup, "images/pauseButton.png", system.ResourceDirectory, 40, 20)
+    pauseButton = display.newImage( sceneGroup, "images/pauseButton.png", system.ResourceDirectory, 40, 20)
     --PAUSED text
-    pausedText = display.newText( pauseGroup, "PAUSED", display.contentWidth + 500, 140, globals.font.regular, 32 )
+    pausedText = display.newText( sceneGroup, "PAUSED", display.contentWidth + 500, 140, globals.font.regular, 32 )
     pausedText:setFillColor(0,0,0)
     --Resume button
-    resumebg = display.newImage( pauseGroup, "images/largeTealButton.png", system.ResourceDirectory, 1000, 200)
-    resumetext = display.newText( pauseGroup, "resume", 1000, 200, globals.font.regular, 25 )
+    resumebg = display.newImage( sceneGroup, "images/largeTealButton.png", system.ResourceDirectory, 1000, 200)
+    resumetext = display.newText( sceneGroup, "resume", 1000, 200, globals.font.regular, 25 )
     
     --Restart button
-    restartbg = display.newImage( pauseGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, 270)
-    restarttext = display.newText( pauseGroup, "restart", display.contentWidth + 500, 270, globals.font.regular, 25 )
+    restartbg = display.newImage( sceneGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, 270)
+    restarttext = display.newText( sceneGroup, "restart", display.contentWidth + 500, 270, globals.font.regular, 25 )
     --    --Restart button
-    --    exitbg = display.newImage( pauseGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, 175)
-    --    exittext = display.newText( pauseGroup, "exit", display.contentWidth + 500, 175, globals.font.regular, 25 )
+    --    exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, 175)
+    --    exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, 175, globals.font.regular, 25 )
     
     --Dots
     -- Dot order: 
@@ -135,8 +134,7 @@ function scene:show( event )
     
     local sceneGroup = self.view
     local phase = event.phase
-    local pauseGroup = display.newGroup()
-    sceneGroup:insert(pauseGroup)
+    local sceneGroup = display.newGroup()
     
     if ( phase == "will" ) then
         globals.score = 0
@@ -193,8 +191,8 @@ function scene:show( event )
                 else
                     if globals.settings.sound == true then
                         audio.play(fail)
-                        system.vibrate()
                     end
+                    system.vibrate()
                     numLife = numLife - 1
                     if numLife == 2 or numLife == 1  then
                         transition.to(life[numLife + 1], {time = 250, alpha = 0})
@@ -270,6 +268,7 @@ function scene:show( event )
                 local timesFound = 0
                 
                 local function findDot()
+                    currentFunction = "findDot"
                     if isRunning == true then
                         timesFound = timesFound + 1
                         local i = timesFound
@@ -297,8 +296,21 @@ function scene:show( event )
         
         --Start sequence
         findPattern()
-        
+        local function transitionPauseGroup(inOut)
+            transition.to(pausedText, {time = 250, transition = easing.inQuad, x = inOut})
+            transition.to(resumebg, {time = 350, transition = easing.inQuad, x = inOut})
+            transition.to(resumetext, {time = 350, transition = easing.inQuad, x = inOut})
+            transition.to(restartbg, {time = 450, transition = easing.inQuad, x = inOut})
+            transition.to(restarttext, {time = 450, transition = easing.inQuad, x = inOut})
+        end
+        local function transitionOthers()
+            transition.to(pauseButton, {time = 200, alpha = 1})
+            for i = 1, globals.settings.numDots do
+                transition.to(dot[i], {time = 200, alpha = 1})
+            end
+        end
         local function pauseGame()
+            print(currentFunction)
             isRunning = false
             transition.pause()
             if timerHandler ~= nil then
@@ -308,43 +320,39 @@ function scene:show( event )
             for i = 1, globals.settings.numDots do
                 transition.to(dot[i], {time = 150, alpha = 0})
             end
-            transition.to(pausedText, {time = 250, transition = easing.inQuad, x = globals.centerX})
-            transition.to(resumebg, {time = 350, transition = easing.inQuad, x = globals.centerX})
-            transition.to(resumetext, {time = 350, transition = easing.inQuad, x = globals.centerX})
-            transition.to(restartbg, {time = 450, transition = easing.inQuad, x = globals.centerX})
-            transition.to(restarttext, {time = 450, transition = easing.inQuad, x = globals.centerX})
+            transitionPauseGroup(globals.centerX)
             local function resumeGame()
                 isRunning = true
                 if timerHandler ~= nil then
                     timer.resume(timerHandler)
                 end
-                local function transitionOthers()
-                    transition.to(pauseButton, {time = 200, alpha = 1})
-                    for i = 1, globals.settings.numDots do
-                        transition.to(dot[i], {time = 200, alpha = 1})
-                    end
-                end
-                transition.to(pausedText, {time = 250, transition = easing.inQuad, x = 1000})
-                transition.to(resumebg, {time = 250, transition = easing.inQuad, x = 1000})
-                transition.to(resumetext, {time = 250, transition = easing.inQuad, x = 1000})
-                transition.to(restartbg, {time = 250, transition = easing.inQuad, x = 1000})
-                transition.to(restarttext, {time = 250, transition = easing.inQuad, x = 1000, onComplete = transitionOthers})
-                
-                --BUGS!
-                if currentFunction == "checkPattern" then
-                    findPattern()
-                    --double game happens
-                elseif currentFunction == "findPattern" then
-                    for i = 1, 9 do
-                        dot[i].xScale, dot[i].yScale = 1, 1
-                    end
-                    --only shows 2nd part of transition - fix!
+                transitionOthers()
+                transitionPauseGroup(1000)
+                if currentFunction == "checkPattern" or currentFunction == "findPattern" then
                     findPattern()
                 else
                     transition.resume()
                 end
             end
+            local function restartGame()
+                isRunning = true
+                if timerHandler ~= nil then
+                    timer.cancel(timerHandler)
+                end
+                transitionPauseGroup(1000)
+                transitionOthers()
+                globals.score = 0
+                scoreText.text = globals.score
+                timeLeft = 10
+                timeText = timeLeft
+                for i = 1, 3 do
+                    life[i].alpha = 1
+                end
+                numLife = 3
+                findPattern()
+            end
             resumebg:addEventListener("tap", resumeGame)
+            --restartbg:addEventListener("tap", resumeGame)
         end
         pauseButton:addEventListener("tap", pauseGame)
     end
@@ -361,8 +369,6 @@ function scene:hide( event )
             globals.settings.highScore = globals.score
         end
         saveTable(globals.settings, "settings.json")
-        isRunning = true
-        timeLeft = 10
     elseif ( phase == "did" ) then
         for i = 1, globals.settings.numDots do
             if dot[i].xScale == 2 and dot[i].yScale == 2 then
