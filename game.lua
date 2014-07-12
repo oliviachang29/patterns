@@ -147,7 +147,7 @@ function scene:show( event )
         timeLeft = 10
         --Load Sounds
         ding = {}
-        for i = 1, 16 do
+        for i = 1, globals.numDots do
             ding[i] = audio.loadSound("audio/ding/" .. i .. ".mp3")
         end
         success = audio.loadSound("audio/success.wav")
@@ -253,6 +253,7 @@ function scene:show( event )
                     for i = 1, globals.settings.numDots do
                         dot[i]:addEventListener("touch", onTouch)
                     end
+                    
                 end
                 userEnter()
             end
@@ -300,8 +301,8 @@ function scene:show( event )
             transition.to(pausedText, {time = 250, transition = easing.inQuad, x = inOut})
             transition.to(resumebg, {time = 350, transition = easing.inQuad, x = inOut})
             transition.to(resumetext, {time = 350, transition = easing.inQuad, x = inOut})
-            transition.to(restartbg, {time = 450, transition = easing.inQuad, x = inOut})
-            transition.to(restarttext, {time = 450, transition = easing.inQuad, x = inOut})
+            --            transition.to(restartbg, {time = 450, transition = easing.inQuad, x = inOut})
+            --            transition.to(restarttext, {time = 450, transition = easing.inQuad, x = inOut})
         end
         local function transitionOthers()
             transition.to(pauseButton, {time = 200, alpha = 1})
