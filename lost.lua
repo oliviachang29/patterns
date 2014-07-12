@@ -4,26 +4,13 @@ local composer = require( "composer" )
 local scene = composer.newScene()
 local globals = require("globals")
 local ads = require "ads"
----------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE
--- unless "composer.removeScene()" is called.
----------------------------------------------------------------------------------
 
 -- local forward references should go here
 local scoreText
----------------------------------------------------------------------------------
 
 -- "scene:create()"
 function scene:create( event )
     local sceneGroup = self.view
-    -- if on simulator, let user know they must build for device
-    if system.getInfo("environment") == "simulator" then
-        print( "Please build for device or Xcode simulator to test this sample.")
-    else
-        -- start with banner ad
-        ads.show( "banner", { x=0, y=-23} ) --Show ads
-    end
-    --globals.score = 0
     --Score
     local scoreTitle = display.newText( sceneGroup, "score", globals.centerX, 60, globals.font.regular, 40 )
     scoreTitle:setFillColor(0,0,0)
@@ -56,13 +43,16 @@ function scene:show( event )
     
     if ( phase == "will" ) then
         scoreText.text = globals.score
-        
-        -- Called when the scene is still off screen (but is about to come on screen).
+        -- if on simulator, let user know they must build for device
+        if system.getInfo("environment") == "simulator" then
+            print( "Please build for device or Xcode simulator to test this sample.")
+        else
+            -- start with banner ad
+            ads.show( "banner", { x=0, y=-23} ) --Show ads
+        end
     elseif ( phase == "did" ) then
         composer.returnTo = "menu"
-        -- Called when the scene is now on screen.
-        -- Insert code here to make the scene come alive.
-        -- Example: start timers, begin animation, play audio, etc.
+
     end
 end
 
@@ -73,12 +63,9 @@ function scene:hide( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-        -- Called when the scene is on screen (but is about to go off screen).
-        -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
+
     elseif ( phase == "did" ) then
         ads.hide()
-        -- Called immediately after scene goes off screen.
     end
 end
 
@@ -87,9 +74,6 @@ function scene:destroy( event )
     
     local sceneGroup = self.view
     
-    -- Called prior to the removal of scene's view ("sceneGroup").
-    -- Insert code here to clean up the scene.
-    -- Example: remove display objects, save state, etc.
 end
 
 ---------------------------------------------------------------------------------
