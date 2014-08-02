@@ -32,9 +32,6 @@ function scene:create( event )
         colorDot[i] = display.newImage( sceneGroup, "images/smallDot/" .. i .. ".png")
         colorDot[i].alpha = 0.35
         colorDot[i].id = i
---        colorDot[i].r = i
---        colorDot[i].g = i
---        colorDot[i].b = i
         if i == globals.settings.color then
             transition.to(colorDot[i], {time = 200, alpha = 1})
         end

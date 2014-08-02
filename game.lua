@@ -18,6 +18,14 @@ local resumebg
 local resumetext
 local restartbg
 local restarttext
+local createDot
+
+--functions
+local function removeAllListeners(obj)
+    obj._functionListeners = nil
+    obj._tableListeners = nil
+end
+
 function scene:create( event )
     local sceneGroup = self.view
     --Pausing
@@ -32,75 +40,77 @@ function scene:create( event )
     --Restart button
     restartbg = display.newImage( sceneGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, 270)
     restarttext = display.newText( sceneGroup, "restart", display.contentWidth + 500, 270, globals.font.regular, 25 )
-    --    --Restart button
-    --    exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, 175)
-    --    exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, 175, globals.font.regular, 25 )
+        --Exit button
+        exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, 340)
+        exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, 340, globals.font.regular, 25 )
     
     --Dots
     -- Dot order: 
     -- Top left starts as 1, moves horizontally then to the next line.
     -- Bottom right is the number of dots
-    dot = {}
-    for i = 1, globals.settings.numDots do
-        if globals.settings.numDots == 9 then
-            dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
-            --Set the x coordinate
-            if i == 1  or i == 4 or i == 7 then
-                dot[i].x = 40
-            elseif i == 2 or i == 5 or i == 8 then
-                dot[i].x = 160
-            elseif i == 3 or i == 6 or i == 9 then
-                dot[i].x = 280
+    createDot = function()
+        dot = {}
+        for i = 1, globals.settings.numDots do
+            if globals.settings.numDots == 9 then
+                dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
+                --Set the x coordinate
+                if i == 1  or i == 4 or i == 7 then
+                    dot[i].x = 40
+                elseif i == 2 or i == 5 or i == 8 then
+                    dot[i].x = 160
+                elseif i == 3 or i == 6 or i == 9 then
+                    dot[i].x = 280
+                end
+                --Set the y coordinate
+                if i == 1  or i == 2 or i == 3 then
+                    dot[i].y = 180
+                elseif i == 4 or i == 5 or i == 6 then
+                    dot[i].y = 290
+                elseif i == 7 or i == 8 or i == 9 then
+                    dot[i].y = 400
+                end
+            elseif globals.settings.numDots == 4 then
+                dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
+                --Set the x coordinate
+                if i == 1 or i == 3 then
+                    dot[i].x = 100
+                elseif i == 2 or i == 4 then
+                    dot[i].x = 200
+                end
+                --Set the y coordinate
+                if i == 1 or i == 2 then
+                    dot[i].y = 220
+                elseif i == 3 or i == 4 then
+                    dot[i].y = 320
+                end
+            elseif globals.settings.numDots == 16 then
+                dot[i] = display.newImage("images/smallDot/" .. globals.settings.color .. ".png")
+                --Set the x coordinate
+                if i == 1 or i == 5 or i == 9 or i == 13 then
+                    dot[i].x = 40
+                elseif i == 2 or i == 6 or i == 10 or i == 14 then
+                    dot[i].x = 120
+                elseif i == 3 or i == 7 or i == 11 or i == 15 then
+                    dot[i].x = 200
+                elseif i == 4 or i == 8 or i == 12 or i == 16 then
+                    dot[i].x = 280
+                end
+                --Set the y coordinate
+                if i == 1 or i == 2 or i == 3 or i == 4 then
+                    dot[i].y = 160
+                elseif i == 5 or i == 6 or i == 7 or i == 8 then
+                    dot[i].y = 240
+                elseif i == 9 or i == 10 or i == 11 or i == 12 then
+                    dot[i].y = 320
+                elseif i == 13 or i == 14 or i == 15 or i == 16 then
+                    dot[i].y = 400
+                end
             end
-            --Set the y coordinate
-            if i == 1  or i == 2 or i == 3 then
-                dot[i].y = 180
-            elseif i == 4 or i == 5 or i == 6 then
-                dot[i].y = 290
-            elseif i == 7 or i == 8 or i == 9 then
-                dot[i].y = 400
-            end
-        elseif globals.settings.numDots == 4 then
-            dot[i] = display.newImage("images/dot/" .. globals.settings.color .. ".png")
-            --Set the x coordinate
-            if i == 1 or i == 3 then
-                dot[i].x = 100
-            elseif i == 2 or i == 4 then
-                dot[i].x = 200
-            end
-            --Set the y coordinate
-            if i == 1 or i == 2 then
-                dot[i].y = 220
-            elseif i == 3 or i == 4 then
-                dot[i].y = 320
-            end
-        elseif globals.settings.numDots == 16 then
-            dot[i] = display.newImage("images/smallDot/" .. globals.settings.color .. ".png")
-            --Set the x coordinate
-            if i == 1 or i == 5 or i == 9 or i == 13 then
-                dot[i].x = 40
-            elseif i == 2 or i == 6 or i == 10 or i == 14 then
-                dot[i].x = 120
-            elseif i == 3 or i == 7 or i == 11 or i == 15 then
-                dot[i].x = 200
-            elseif i == 4 or i == 8 or i == 12 or i == 16 then
-                dot[i].x = 280
-            end
-            --Set the y coordinate
-            if i == 1 or i == 2 or i == 3 or i == 4 then
-                dot[i].y = 160
-            elseif i == 5 or i == 6 or i == 7 or i == 8 then
-                dot[i].y = 240
-            elseif i == 9 or i == 10 or i == 11 or i == 12 then
-                dot[i].y = 320
-            elseif i == 13 or i == 14 or i == 15 or i == 16 then
-                dot[i].y = 400
-            end
+            sceneGroup:insert(dot[i])
+            dot[i].id = i
         end
-        sceneGroup:insert(dot[i])
-        dot[i].id = i
     end
-    
+    createDot()
     --Lives
     --Lives order: 1 2 3
     local livesText = display.newText(sceneGroup, "lives", 55, 60 , globals.font.regular, 25)
@@ -147,7 +157,7 @@ function scene:show( event )
         timeLeft = 10
         --Load Sounds
         ding = {}
-        for i = 1, globals.numDots do
+        for i = 1, globals.settings.numDots do
             ding[i] = audio.loadSound("audio/ding/" .. i .. ".mp3")
         end
         success = audio.loadSound("audio/success.wav")
@@ -243,9 +253,9 @@ function scene:show( event )
                             else
                                 userEnter()
                             end
-                            transition.to(obj, {time = flashSpeed, xScale = 1, yScale = 1})
+                            transition.to(obj, {time = flashSpeed, tag = dot, xScale = 1, yScale = 1})
                         end
-                        transition.to(event.target, {time = flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        transition.to(event.target, {time = flashSpeed, tag = dot, xScale = 2, yScale = 2, onComplete = removeFlash})
                         for i = 1, globals.settings.numDots do
                             dot[i]:removeEventListener("touch", onTouch)
                         end
@@ -286,9 +296,9 @@ function scene:show( event )
                             end
                         end
                         local function removeFlash()
-                            transition.to(pattern[i], {time = flashSpeed, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
+                            transition.to(pattern[i], {time = flashSpeed, tag = dot, xScale = 1, yScale = 1, onComplete = checkIfFoundTimes})
                         end
-                        transition.to(pattern[i], {time = flashSpeed, xScale = 2, yScale = 2, onComplete = removeFlash})
+                        transition.to(pattern[i], {time = flashSpeed, tag = dot, xScale = 2, yScale = 2, onComplete = removeFlash})
                     end
                 end
                 findDot()
@@ -301,8 +311,10 @@ function scene:show( event )
             transition.to(pausedText, {time = 250, transition = easing.inQuad, x = inOut})
             transition.to(resumebg, {time = 350, transition = easing.inQuad, x = inOut})
             transition.to(resumetext, {time = 350, transition = easing.inQuad, x = inOut})
-            --            transition.to(restartbg, {time = 450, transition = easing.inQuad, x = inOut})
-            --            transition.to(restarttext, {time = 450, transition = easing.inQuad, x = inOut})
+            transition.to(restartbg, {time = 450, transition = easing.inQuad, x = inOut})
+            transition.to(restarttext, {time = 450, transition = easing.inQuad, x = inOut})
+            transition.to(exitbg, {time = 550, transition = easing.inQuad, x = inOut})
+            transition.to(exittext, {time = 550, transition = easing.inQuad, x = inOut})
         end
         local function transitionOthers()
             transition.to(pauseButton, {time = 200, alpha = 1})
@@ -313,7 +325,7 @@ function scene:show( event )
         local function pauseGame()
             print(currentFunction)
             isRunning = false
-            transition.pause()
+            transition.pause(dot)
             if timerHandler ~= nil then
                 timer.pause(timerHandler)
             end
@@ -330,12 +342,19 @@ function scene:show( event )
                 transitionOthers()
                 transitionPauseGroup(1000)
                 if currentFunction == "checkPattern" or currentFunction == "findPattern" then
-                    findPattern()
+                    timer.performWithDelay(200, findPattern)
                 else
-                    transition.resume()
+                    transition.resume(dot)
                 end
             end
             local function restartGame()
+                transition.cancel(dot)
+                for i = 1, globals.settings.numDots do
+--                    removeAllListeners(dot[i])
+                    display.remove(dot[i])
+                    dot[i] = nil
+                end
+                timer.performWithDelay(200, createDot)
                 isRunning = true
                 if timerHandler ~= nil then
                     timer.cancel(timerHandler)
@@ -345,15 +364,22 @@ function scene:show( event )
                 globals.score = 0
                 scoreText.text = globals.score
                 timeLeft = 10
-                timeText = timeLeft
+                timeText.text = timeLeft
                 for i = 1, 3 do
                     life[i].alpha = 1
                 end
                 numLife = 3
-                findPattern()
+                timer.performWithDelay(200, findPattern)
+            end
+            local function exitGame()
+                transition.cancel(dot)
+                transitionPauseGroup(1000)
+                transitionOthers()
+                composer.gotoScene("menu", {effect = "slideRight"})
             end
             resumebg:addEventListener("tap", resumeGame)
-            --restartbg:addEventListener("tap", resumeGame)
+            restartbg:addEventListener("tap", restartGame)
+            exitbg:addEventListener("tap", exitGame)
         end
         pauseButton:addEventListener("tap", pauseGame)
     end

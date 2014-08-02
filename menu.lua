@@ -8,6 +8,7 @@ local ads = require "ads" --Corona's ads library
 
 -- local forward references should go here
 local playbg
+local settingsbutton
 
 -- "scene:create()"
 function scene:create( event )
@@ -23,7 +24,7 @@ function scene:create( event )
     local playtext = display.newText( sceneGroup, "play", globals.centerX, 850, globals.font.regular, 25 )
     
     --display settingsbutton
-    local settingsbutton = display.newImage( sceneGroup, "images/settingsbutton.png", system.ResourceDirectory, globals.centerX, 900)
+    settingsbutton = display.newImage( sceneGroup, "images/settingsbutton.png", system.ResourceDirectory, globals.centerX, 900)
     sceneGroup:insert(settingsbutton)
     
     --Appear into screen
@@ -31,16 +32,7 @@ function scene:create( event )
     transition.to(playbg, {time = 1200, y = 365})
     transition.to(playtext, {time = 1200, y = 365})
     transition.to(settingsbutton, {time = 1400, y = 435})
-    local function gotoSettings()
-        composer.gotoScene("settings", {effect = "slideLeft"}) 
-    end
-    local function gotoGame()
-        composer.gotoScene("game", {effect = "slideLeft"}) 
-        playbg:removeEventListener("touch", gotoGame)
-    end
-    --Add listeners
-    settingsbutton:addEventListener("touch", gotoSettings)
-    playbg:addEventListener("touch", gotoGame)
+    
 end
 
 -- "scene:show()"
@@ -50,11 +42,26 @@ function scene:show( event )
     local phase = event.phase
     
     if ( phase == "will" ) then
-       
+        local function gotoSettings()
+            composer.gotoScene("settings", {effect = "slideLeft"})
+            playbg:removeEventListener("touch", gotoGame)
+            settingsbutton:removeEventListener("touch", gotoSettings)
+            print("gotoSettings")
+        end
+        
+        local function gotoGame()
+            composer.gotoScene("game", {effect = "slideLeft"}) 
+            playbg:removeEventListener("touch", gotoGame)
+            settingsbutton:removeEventListener("touch", gotoSettings)
+            print("gotoGame")
+        end
+        
+        --Add listeners
+        settingsbutton:addEventListener("touch", gotoSettings)
+        playbg:addEventListener("touch", gotoGame)
         
     elseif ( phase == "did" ) then
         composer.returnTo = nil
-        
     end
 end
 
