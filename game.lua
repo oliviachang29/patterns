@@ -14,17 +14,16 @@ local numLife
 local ding
 local success
 local fail
+local pauseButton
+local pausedText
 local resumebg
 local resumetext
 local restartbg
 local restarttext
+local exitbg
+local exittext
 local createDot
-
---functions
-local function removeAllListeners(obj)
-    obj._functionListeners = nil
-    obj._tableListeners = nil
-end
+local isRunning
 
 function scene:create( event )
     local sceneGroup = self.view
@@ -40,9 +39,9 @@ function scene:create( event )
     --Restart button
     restartbg = display.newImage( sceneGroup, "images/largePinkButton.png", system.ResourceDirectory, display.contentWidth + 500, 270)
     restarttext = display.newText( sceneGroup, "restart", display.contentWidth + 500, 270, globals.font.regular, 25 )
-        --Exit button
-        exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, 340)
-        exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, 340, globals.font.regular, 25 )
+    --Exit button
+    exitbg = display.newImage( sceneGroup, "images/largeGreenButton.png", system.ResourceDirectory, display.contentWidth + 500, 340)
+    exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, 340, globals.font.regular, 25 )
     
     --Dots
     -- Dot order: 
@@ -155,6 +154,7 @@ function scene:show( event )
             life[i].alpha = 1
         end
         timeLeft = 10
+        timeText.text = timeLeft
         --Load Sounds
         ding = {}
         for i = 1, globals.settings.numDots do
@@ -165,7 +165,6 @@ function scene:show( event )
         audio.setVolume(0.8)
         timeLeft = 10
     elseif ( phase == "did" ) then
-        --        composer.returnTo = "menu"
         composer.returnTo = nil
         local findPattern
         local pattern
@@ -181,15 +180,17 @@ function scene:show( event )
                 if flashSpeed >= 30 then
                     flashSpeed = flashSpeed - 5
                 end
-                timer.cancel(timerHandler)
+                if timerHandler ~= nil then timer.cancel(timerHandler) end
                 timeLeft = 10
                 timeText.text = timeLeft
                 --Check Pattern
                 local numCorrect = 0
+                if userPattern ~= nil then
                 for i = 1, #userPattern do
                     if userPattern[i] == pattern[i] then
                         numCorrect = numCorrect + 1
                     end
+                end
                 end
                 if numCorrect == globals.settings.numFlashes then
                     if globals.settings.sound == true then
@@ -210,11 +211,12 @@ function scene:show( event )
                     elseif numLife == 0 then
                         transition.to(life[1], {time = 250, alpha = 0, onComplete = composer.gotoScene("lost", {effect = "slideLeft"})})
                         timer.cancel(timerHandler)
+                        timerHandler = nil
                     end
                     print("User lost a life. Current number of lives: " .. numLife)
                 end
                 pattern = nil
-                userPattern = nil
+                if userPattern ~= nil then userPattern = nil end
                 numCorrect = nil
                 timerHandler = nil
             end
@@ -322,7 +324,11 @@ function scene:show( event )
                 transition.to(dot[i], {time = 200, alpha = 1})
             end
         end
-        local function pauseGame()
+        local function makeNil()
+            if pattern ~= nil then pattern = nil end
+            if userPattern ~= nil then userPattern = nil end
+        end
+        function globals.pauseGame()
             print(currentFunction)
             isRunning = false
             transition.pause(dot)
@@ -334,6 +340,7 @@ function scene:show( event )
                 transition.to(dot[i], {time = 150, alpha = 0})
             end
             transitionPauseGroup(globals.centerX)
+            --
             local function resumeGame()
                 isRunning = true
                 if timerHandler ~= nil then
@@ -341,16 +348,15 @@ function scene:show( event )
                 end
                 transitionOthers()
                 transitionPauseGroup(1000)
-                if currentFunction == "checkPattern" or currentFunction == "findPattern" then
+                transition.resume()
+                if currentFunction == "checkPattern" then
                     timer.performWithDelay(200, findPattern)
-                else
-                    transition.resume(dot)
                 end
             end
             local function restartGame()
+                makeNil()
                 transition.cancel(dot)
                 for i = 1, globals.settings.numDots do
---                    removeAllListeners(dot[i])
                     display.remove(dot[i])
                     dot[i] = nil
                 end
@@ -372,16 +378,26 @@ function scene:show( event )
                 timer.performWithDelay(200, findPattern)
             end
             local function exitGame()
-                transition.cancel(dot)
-                transitionPauseGroup(1000)
-                transitionOthers()
-                composer.gotoScene("menu", {effect = "slideRight"})
+                makeNil() -- earlier function to make pattern and userPattern nil
+                transition.cancel(dot) -- cancel (not pause) all transitions tagged dot
+                transitionPauseGroup(1000) -- earlier function to transition the all objects related to pauses' x to 1000
+                transitionOthers()  -- earlier function to transition the pauseButton and the dots' alpha to 1
+                if timerHandler ~= nil then -- if the timerHandler exists, cancel it
+                    timer.cancel(timerHandler) 
+                    timerHandler = nil
+                end
+                for i = 1, globals.settings.numDots do
+                    display.remove(dot[i])
+                    dot[i] = nil
+                end
+                createDot()
+                composer.gotoScene("menu", {effect = "slideRight"})  -- go back to menu, since that's where the user wants to go by pressing exit
             end
             resumebg:addEventListener("tap", resumeGame)
             restartbg:addEventListener("tap", restartGame)
             exitbg:addEventListener("tap", exitGame)
         end
-        pauseButton:addEventListener("tap", pauseGame)
+        pauseButton:addEventListener("tap", globals.pauseGame)
     end
 end
 

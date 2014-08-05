@@ -32,7 +32,6 @@ function scene:create( event )
     transition.to(playbg, {time = 1200, y = 365})
     transition.to(playtext, {time = 1200, y = 365})
     transition.to(settingsbutton, {time = 1400, y = 435})
-    
 end
 
 -- "scene:show()"
@@ -43,22 +42,22 @@ function scene:show( event )
     
     if ( phase == "will" ) then
         local function gotoSettings()
-            composer.gotoScene("settings", {effect = "slideLeft"})
-            playbg:removeEventListener("touch", gotoGame)
-            settingsbutton:removeEventListener("touch", gotoSettings)
-            print("gotoSettings")
-        end
-        
-        local function gotoGame()
-            composer.gotoScene("game", {effect = "slideLeft"}) 
-            playbg:removeEventListener("touch", gotoGame)
-            settingsbutton:removeEventListener("touch", gotoSettings)
-            print("gotoGame")
-        end
-        
-        --Add listeners
-        settingsbutton:addEventListener("touch", gotoSettings)
-        playbg:addEventListener("touch", gotoGame)
+        composer.gotoScene("settings", {effect = "slideLeft"})
+        globals.removeAllListeners(playbg)
+        globals.removeAllListeners(settingsbutton)
+        print("gotoSettings")
+    end
+    
+    local function gotoGame()
+        composer.gotoScene("game", {effect = "slideLeft"}) 
+        globals.removeAllListeners(playbg)
+        globals.removeAllListeners(settingsbutton)
+        print("gotoGame")
+    end
+    
+    --Add listeners
+    settingsbutton:addEventListener("touch", gotoSettings)
+    playbg:addEventListener("touch", gotoGame)
         
     elseif ( phase == "did" ) then
         composer.returnTo = nil

@@ -44,15 +44,11 @@ function loadTable(filename)
     return nil
 end
 
---Determine x/y
---function globals.dS(placing)
---    if string.sub(system.getInfo("model"),1,4) == "iPad" or string.sub(system.getInfo("model"),1,2) == "iP" then
---
---    end
---end
-function globals.dS(placing)
-    placing = placing - 50
-    return display.contentHeight - placing
+--Remove all listeners
+function globals.removeAllListeners(obj)
+    obj._functionListeners = nil
+    obj._tableListeners = nil
 end
+
 
 return globals

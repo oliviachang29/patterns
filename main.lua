@@ -10,7 +10,7 @@ display.screenOriginY,
 display.pixelWidth, 
 display.pixelHeight)
 background.x, background.y = display.contentCenterX,  display.contentCenterY
-background:setFillColor(0/2555, 134/255, 131/255)
+background:setFillColor(55/2555, 56/255, 71/255)
 background:toBack()
 
 --Require
@@ -91,9 +91,9 @@ ads.init( "admob", "ca-app-pub-8528469529929882/6097073250", adListener ) --Init
 local function splashScreen()
     local companyText = display.newText( "Sixtuitive", globals.centerX, globals.centerY, globals.font.regular, 35 )
     local function removeSplashScreen()
-        transition.to(dragonImage, {time = 500, alpha = 0})
         transition.to(companyText, {time = 500, alpha = 0})
         local function gotoScene()
+            companyText = nil
             background:setFillColor(250/255, 250/255, 250/255)
             if globals.settings.openedBefore == false then
                 composer.gotoScene("tutorial")
