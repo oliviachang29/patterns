@@ -1,6 +1,5 @@
-# README #
+# Patterns #
 
-Patterns
 Website: [sixtuitive.com/patterns](https://www.sixtuitive.com/patterns.html) *Link doesn't work yet*
 
 When commiting, use this format:
