@@ -186,11 +186,11 @@ function scene:show( event )
                 --Check Pattern
                 local numCorrect = 0
                 if userPattern ~= nil then
-                for i = 1, #userPattern do
-                    if userPattern[i] == pattern[i] then
-                        numCorrect = numCorrect + 1
+                    for i = 1, #userPattern do
+                        if userPattern[i] == pattern[i] then
+                            numCorrect = numCorrect + 1
+                        end
                     end
-                end
                 end
                 if numCorrect == globals.settings.numFlashes then
                     if globals.settings.sound == true then
@@ -309,29 +309,30 @@ function scene:show( event )
         
         --Start sequence
         findPattern()
-        local function transitionPauseGroup(inOut)
-            transition.to(pausedText, {time = 250, transition = easing.inQuad, x = inOut})
-            transition.to(resumebg, {time = 350, transition = easing.inQuad, x = inOut})
-            transition.to(resumetext, {time = 350, transition = easing.inQuad, x = inOut})
-            transition.to(restartbg, {time = 450, transition = easing.inQuad, x = inOut})
-            transition.to(restarttext, {time = 450, transition = easing.inQuad, x = inOut})
-            transition.to(exitbg, {time = 550, transition = easing.inQuad, x = inOut})
-            transition.to(exittext, {time = 550, transition = easing.inQuad, x = inOut})
-        end
-        local function transitionOthers()
-            transition.to(pauseButton, {time = 200, alpha = 1})
-            for i = 1, globals.settings.numDots do
-                transition.to(dot[i], {time = 200, alpha = 1})
+        
+        local function pauseGame()
+            local function transitionPauseGroup(inOut)
+                transition.to(pausedText, {time = 250, transition = easing.inQuad, x = inOut})
+                transition.to(resumebg, {time = 350, transition = easing.inQuad, x = inOut})
+                transition.to(resumetext, {time = 350, transition = easing.inQuad, x = inOut})
+                transition.to(restartbg, {time = 450, transition = easing.inQuad, x = inOut})
+                transition.to(restarttext, {time = 450, transition = easing.inQuad, x = inOut})
+                transition.to(exitbg, {time = 550, transition = easing.inQuad, x = inOut})
+                transition.to(exittext, {time = 550, transition = easing.inQuad, x = inOut})
             end
-        end
-        local function makeNil()
-            if pattern ~= nil then pattern = nil end
-            if userPattern ~= nil then userPattern = nil end
-        end
-        function globals.pauseGame()
+            local function transitionOthers()
+                transition.to(pauseButton, {time = 200, alpha = 1})
+                for i = 1, globals.settings.numDots do
+                    transition.to(dot[i], {time = 200, alpha = 1})
+                end
+            end
+            local function makeNil()
+                if pattern ~= nil then pattern = nil end
+                if userPattern ~= nil then userPattern = nil end
+            end
             print(currentFunction)
             isRunning = false
-            transition.pause(dot)
+            transition.pause(dot) --\\HERE//
             if timerHandler ~= nil then
                 timer.pause(timerHandler)
             end
@@ -348,9 +349,14 @@ function scene:show( event )
                 end
                 transitionOthers()
                 transitionPauseGroup(1000)
-                transition.resume()
-                if currentFunction == "checkPattern" then
+                
+                if currentFunction == "findPattern" or currentFunction == "findDot" then
+                    transition.cancel(dot)
                     timer.performWithDelay(200, findPattern)
+                elseif currentFunction == "checkPattern" then
+                    timer.performWithDelay(200, findPattern)
+                else
+                    transition.resume(dot) --\\HERE//
                 end
             end
             local function restartGame()
@@ -380,6 +386,7 @@ function scene:show( event )
             local function exitGame()
                 makeNil() -- earlier function to make pattern and userPattern nil
                 transition.cancel(dot) -- cancel (not pause) all transitions tagged dot
+                --timer.performWithDelay(500, transition.cancel)
                 transitionPauseGroup(1000) -- earlier function to transition the all objects related to pauses' x to 1000
                 transitionOthers()  -- earlier function to transition the pauseButton and the dots' alpha to 1
                 if timerHandler ~= nil then -- if the timerHandler exists, cancel it
@@ -397,7 +404,7 @@ function scene:show( event )
             restartbg:addEventListener("tap", restartGame)
             exitbg:addEventListener("tap", exitGame)
         end
-        pauseButton:addEventListener("tap", globals.pauseGame)
+        pauseButton:addEventListener("tap", pauseGame)
     end
 end
 
