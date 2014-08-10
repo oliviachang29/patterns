@@ -213,7 +213,6 @@ function scene:show( event )
                         timer.cancel(timerHandler)
                         timerHandler = nil
                     end
-                    print("User lost a life. Current number of lives: " .. numLife)
                 end
                 pattern = nil
                 if userPattern ~= nil then userPattern = nil end
@@ -226,7 +225,7 @@ function scene:show( event )
             currentFunction = "enterPattern"
             if isRunning == true then
                 if timeText == nil then
-                    print("ERROR: timeText is nil - User in userDotCopy about to select dots")
+                    print("ERROR: timeText is nil.")
                     return
                 end
                 local function timeCount()
@@ -234,7 +233,6 @@ function scene:show( event )
                     timeText.text = timeLeft
                     if timeLeft == 0 then
                         checkPattern()
-                        print("Time is 0. Checking pattern.")
                     end
                 end
                 timerHandler =  timer.performWithDelay(1000, timeCount, 10)
@@ -330,9 +328,8 @@ function scene:show( event )
                 if pattern ~= nil then pattern = nil end
                 if userPattern ~= nil then userPattern = nil end
             end
-            print(currentFunction)
             isRunning = false
-            transition.pause(dot) --\\HERE//
+            transition.pause(dot)
             if timerHandler ~= nil then
                 timer.pause(timerHandler)
             end
@@ -341,7 +338,6 @@ function scene:show( event )
                 transition.to(dot[i], {time = 150, alpha = 0})
             end
             transitionPauseGroup(globals.centerX)
-            --
             local function resumeGame()
                 isRunning = true
                 if timerHandler ~= nil then
@@ -356,7 +352,7 @@ function scene:show( event )
                 elseif currentFunction == "checkPattern" then
                     timer.performWithDelay(200, findPattern)
                 else
-                    transition.resume(dot) --\\HERE//
+                    transition.resume(dot)
                 end
             end
             local function restartGame()
@@ -386,7 +382,6 @@ function scene:show( event )
             local function exitGame()
                 makeNil() -- earlier function to make pattern and userPattern nil
                 transition.cancel(dot) -- cancel (not pause) all transitions tagged dot
-                --timer.performWithDelay(500, transition.cancel)
                 transitionPauseGroup(1000) -- earlier function to transition the all objects related to pauses' x to 1000
                 transitionOthers()  -- earlier function to transition the pauseButton and the dots' alpha to 1
                 if timerHandler ~= nil then -- if the timerHandler exists, cancel it
