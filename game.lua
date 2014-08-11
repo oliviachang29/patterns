@@ -136,6 +136,12 @@ function scene:create( event )
     globals.score = 0
     scoreText = display.newText(sceneGroup, globals.score, 265, 90, globals.font.regular, 25)
     scoreText:setFillColor(0,0,0)
+    
+    --Load Sounds
+    ding = {}
+    for i = 1, globals.settings.numDots do
+        ding[i] = audio.loadSound("audio/ding/" .. i .. ".mp3")
+    end
 end
 
 
@@ -155,11 +161,7 @@ function scene:show( event )
         end
         timeLeft = 10
         timeText.text = timeLeft
-        --Load Sounds
-        ding = {}
-        for i = 1, globals.settings.numDots do
-            ding[i] = audio.loadSound("audio/ding/" .. i .. ".mp3")
-        end
+        
         success = audio.loadSound("audio/success.wav")
         fail = audio.loadSound("audio/fail.wav")
         audio.setVolume(0.8)
@@ -176,6 +178,7 @@ function scene:show( event )
         
         local function checkPattern()
             currentFunction = "checkPattern"
+            print("currentFunction  = " .. currentFunction)
             if isRunning == true then
                 if flashSpeed >= 30 then
                     flashSpeed = flashSpeed - 5
@@ -208,13 +211,15 @@ function scene:show( event )
                     if numLife == 2 or numLife == 1  then
                         transition.to(life[numLife + 1], {time = 250, alpha = 0})
                         timer.performWithDelay(750, findPattern)
+                        print("numLife = " .. numLife)
                     elseif numLife == 0 then
                         transition.to(life[1], {time = 250, alpha = 0, onComplete = composer.gotoScene("lost", {effect = "slideLeft"})})
                         timer.cancel(timerHandler)
                         timerHandler = nil
+                        print("numLife = " .. numLife)
                     end
                 end
-                pattern = nil
+                if pattern ~= nil then pattern = nil end
                 if userPattern ~= nil then userPattern = nil end
                 numCorrect = nil
                 timerHandler = nil
@@ -223,6 +228,7 @@ function scene:show( event )
         
         local function enterPattern()
             currentFunction = "enterPattern"
+            print("currentFunction  = " .. currentFunction)
             if isRunning == true then
                 if timeText == nil then
                     print("ERROR: timeText is nil.")
@@ -272,6 +278,7 @@ function scene:show( event )
         --Find pattern
         findPattern = function()
             currentFunction = "findPattern"
+            print("currentFunction  = " .. currentFunction)
             if isRunning == true then
                 time = 10
                 math.randomseed(os.time())
@@ -280,6 +287,7 @@ function scene:show( event )
                 
                 local function findDot()
                     currentFunction = "findDot"
+                    print("currentFunction  = " .. currentFunction)
                     if isRunning == true then
                         timesFound = timesFound + 1
                         local i = timesFound
@@ -307,7 +315,7 @@ function scene:show( event )
         
         --Start sequence
         findPattern()
-        
+--        local addListener
         local function pauseGame()
             local function transitionPauseGroup(inOut)
                 transition.to(pausedText, {time = 250, transition = easing.inQuad, x = inOut})
@@ -328,6 +336,11 @@ function scene:show( event )
                 if pattern ~= nil then pattern = nil end
                 if userPattern ~= nil then userPattern = nil end
             end
+            local function removeButtonListeners()
+                globals.removeAllListeners(resumebg)
+                globals.removeAllListeners(restartbg)
+                globals.removeAllListeners(exitbg)
+            end
             isRunning = false
             transition.pause(dot)
             if timerHandler ~= nil then
@@ -339,6 +352,7 @@ function scene:show( event )
             end
             transitionPauseGroup(globals.centerX)
             local function resumeGame()
+                removeButtonListeners()
                 isRunning = true
                 if timerHandler ~= nil then
                     timer.resume(timerHandler)
@@ -356,6 +370,7 @@ function scene:show( event )
                 end
             end
             local function restartGame()
+                removeButtonListeners()
                 makeNil()
                 transition.cancel(dot)
                 for i = 1, globals.settings.numDots do
@@ -380,6 +395,7 @@ function scene:show( event )
                 timer.performWithDelay(200, findPattern)
             end
             local function exitGame()
+                removeButtonListeners()
                 makeNil() -- earlier function to make pattern and userPattern nil
                 transition.cancel(dot) -- cancel (not pause) all transitions tagged dot
                 transitionPauseGroup(1000) -- earlier function to transition the all objects related to pauses' x to 1000
@@ -398,8 +414,17 @@ function scene:show( event )
             resumebg:addEventListener("tap", resumeGame)
             restartbg:addEventListener("tap", restartGame)
             exitbg:addEventListener("tap", exitGame)
+            
+--            pauseButton:removeEventListener("tap", pauseGame)
+--            timer.performWithDelay(1, addListener)
+            print("Paused game")
         end
         pauseButton:addEventListener("tap", pauseGame)
+--        addListener = function()
+--            pauseButton:addEventListener("tap", pauseGame)
+--            print("addListener called")
+--        end
+--        addListener()
     end
 end
 
@@ -426,6 +451,10 @@ end
 
 function scene:destroy( event )
     local sceneGroup = self.view
+    for i = 1, globals.settings.numDots do
+        audio.dispose(ding[i])
+        ding[i] = nil
+    end
 end
 
 ---------------------------------------------------------------------------------
