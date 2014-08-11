@@ -7,4 +7,4 @@ When commiting, use this format:
 
 If there is nothing to be said in a [], use 'N/A'.
 
-For example: N/A. See Bug list. Bug Num 1, can go to settings now. N/A.
+For example: N/A. N/A. Bug Num 1, can go to settings now. N/A.
