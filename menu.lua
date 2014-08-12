@@ -56,8 +56,8 @@ function scene:show( event )
     end
     
     --Add listeners
-    settingsbutton:addEventListener("touch", gotoSettings)
-    playbg:addEventListener("touch", gotoGame)
+    settingsbutton:addEventListener("tap", gotoSettings)
+    playbg:addEventListener("tap", gotoGame)
         
     elseif ( phase == "did" ) then
         composer.returnTo = nil

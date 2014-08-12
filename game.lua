@@ -186,6 +186,9 @@ function scene:show( event )
                 if timerHandler ~= nil then timer.cancel(timerHandler) end
                 timeLeft = 10
                 timeText.text = timeLeft
+                for i = 1, globals.settings.numDots do
+                    globals.removeAllListeners(dot[i])
+                end
                 --Check Pattern
                 local numCorrect = 0
                 if userPattern ~= nil then
@@ -249,6 +252,8 @@ function scene:show( event )
                     timesEntered = timesEntered + 1
                     i = timesEntered
                     local function onTouch(event)
+                        currentFunction = "enterDot"
+                        print("currentFunction = " .. currentFunction)
                         if globals.settings.sound == true then
                             audio.play(ding[event.target.id])
                         end
@@ -315,7 +320,7 @@ function scene:show( event )
         
         --Start sequence
         findPattern()
---        local addListener
+        --        local addListener
         local function pauseGame()
             local function transitionPauseGroup(inOut)
                 transition.to(pausedText, {time = 250, transition = easing.inQuad, x = inOut})
@@ -415,16 +420,16 @@ function scene:show( event )
             restartbg:addEventListener("tap", restartGame)
             exitbg:addEventListener("tap", exitGame)
             
---            pauseButton:removeEventListener("tap", pauseGame)
---            timer.performWithDelay(1, addListener)
+            --            pauseButton:removeEventListener("tap", pauseGame)
+            --            timer.performWithDelay(1, addListener)
             print("Paused game")
         end
         pauseButton:addEventListener("tap", pauseGame)
---        addListener = function()
---            pauseButton:addEventListener("tap", pauseGame)
---            print("addListener called")
---        end
---        addListener()
+        --        addListener = function()
+        --            pauseButton:addEventListener("tap", pauseGame)
+        --            print("addListener called")
+        --        end
+        --        addListener()
     end
 end
 
