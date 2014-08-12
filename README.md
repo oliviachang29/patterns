@@ -3,7 +3,7 @@
 Website: [sixtuitive.com/patterns](https://www.sixtuitive.com/patterns.html) *Link doesn't work yet*
 
 When commiting, use this format:
-[new features].[current bugs].[bugs solved].[other changes]
+[new features].[new bugs].[bugs solved].[other changes]
 
 If there is nothing to be said in a [], use 'N/A'.
 
