@@ -280,7 +280,6 @@ function scene:show( event )
             end
         end
         
-        --Find pattern
         findPattern = function()
             currentFunction = "findPattern"
             print("currentFunction  = " .. currentFunction)
@@ -317,10 +316,8 @@ function scene:show( event )
                 findDot()
             end
         end
-        
-        --Start sequence
         findPattern()
-        --        local addListener
+        
         local function pauseGame()
             local function transitionPauseGroup(inOut)
                 transition.to(pausedText, {time = 250, transition = easing.inQuad, x = inOut})
@@ -357,6 +354,7 @@ function scene:show( event )
             end
             transitionPauseGroup(globals.centerX)
             local function resumeGame()
+                makeNil()
                 removeButtonListeners()
                 isRunning = true
                 if timerHandler ~= nil then
@@ -401,11 +399,11 @@ function scene:show( event )
             end
             local function exitGame()
                 removeButtonListeners()
-                makeNil() -- earlier function to make pattern and userPattern nil
-                transition.cancel(dot) -- cancel (not pause) all transitions tagged dot
-                transitionPauseGroup(1000) -- earlier function to transition the all objects related to pauses' x to 1000
-                transitionOthers()  -- earlier function to transition the pauseButton and the dots' alpha to 1
-                if timerHandler ~= nil then -- if the timerHandler exists, cancel it
+                makeNil()
+                transition.cancel(dot)
+                transitionPauseGroup(1000)
+                timer.performWithDelay(400, transitionOthers)
+                if timerHandler ~= nil then
                     timer.cancel(timerHandler) 
                     timerHandler = nil
                 end
@@ -414,22 +412,14 @@ function scene:show( event )
                     dot[i] = nil
                 end
                 createDot()
-                composer.gotoScene("menu", {effect = "slideRight"})  -- go back to menu, since that's where the user wants to go by pressing exit
+                composer.gotoScene("menu", {effect = "slideRight"})
             end
             resumebg:addEventListener("tap", resumeGame)
             restartbg:addEventListener("tap", restartGame)
             exitbg:addEventListener("tap", exitGame)
-            
-            --            pauseButton:removeEventListener("tap", pauseGame)
-            --            timer.performWithDelay(1, addListener)
             print("Paused game")
         end
         pauseButton:addEventListener("tap", pauseGame)
-        --        addListener = function()
-        --            pauseButton:addEventListener("tap", pauseGame)
-        --            print("addListener called")
-        --        end
-        --        addListener()
     end
 end
 
