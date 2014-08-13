@@ -4,7 +4,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local globals = require("globals")
-local ads = require "ads" --Corona's ads library
 
 -- local forward references should go here
 local playbg

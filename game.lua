@@ -44,9 +44,6 @@ function scene:create( event )
     exittext = display.newText( sceneGroup, "exit", display.contentWidth + 500, 340, globals.font.regular, 25 )
     
     --Dots
-    -- Dot order: 
-    -- Top left starts as 1, moves horizontally then to the next line.
-    -- Bottom right is the number of dots
     createDot = function()
         dot = {}
         for i = 1, globals.settings.numDots do
@@ -342,6 +339,7 @@ function scene:show( event )
                 globals.removeAllListeners(resumebg)
                 globals.removeAllListeners(restartbg)
                 globals.removeAllListeners(exitbg)
+                globals.removeAllListeners(pauseButton)
             end
             isRunning = false
             transition.pause(dot)
@@ -354,6 +352,7 @@ function scene:show( event )
             end
             transitionPauseGroup(globals.centerX)
             local function resumeGame()
+                print("Resuming game")
                 makeNil()
                 removeButtonListeners()
                 isRunning = true
@@ -373,6 +372,7 @@ function scene:show( event )
                 end
             end
             local function restartGame()
+                print("Restarting game")
                 removeButtonListeners()
                 makeNil()
                 transition.cancel(dot)
@@ -398,6 +398,7 @@ function scene:show( event )
                 timer.performWithDelay(200, findPattern)
             end
             local function exitGame()
+                print("Exiting game")
                 removeButtonListeners()
                 makeNil()
                 transition.cancel(dot)

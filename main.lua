@@ -78,15 +78,6 @@ end
 
 Runtime:addEventListener( "key", onKeyEvent )
 
---Ads
-local ads = require "ads"
-local function adListener(event)
-    print("event.isError = " .. tostring(event.isError))
-    globals.adsError = event.isError
-end
-
-ads.init( "admob", "ca-app-pub-8528469529929882/6097073250", adListener ) --Initialize the ads
-
 --Splash Screen
 local function splashScreen()
     local companyText = display.newText( "Sixtuitive", globals.centerX, globals.centerY, globals.font.regular, 35 )
