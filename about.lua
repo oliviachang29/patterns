@@ -14,7 +14,7 @@ function scene:create( event )
     local titleText = display.newText( sceneGroup, "ABOUT", globals.centerX, 45, globals.font.regular, 32 )
     titleText:setFillColor(0,0,0)
     --credits text
-    local versionNameText = display.newText( sceneGroup, "Version: 1.0", globals.centerX, 80, globals.font.regular, 17)
+    local versionNameText = display.newText( sceneGroup, "Version: 1.0.3", globals.centerX, 80, globals.font.regular, 17)
     versionNameText:setFillColor(0,0,0)
     local copyrightText = display.newText( sceneGroup, "© 2014 Sixtuitive", globals.centerX, 120, globals.font.regular, 23)
     copyrightText:setFillColor(0,0,0)

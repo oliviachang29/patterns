@@ -106,7 +106,7 @@ function scene:create( event )
             dot[i].id = i
         end
     end
-    createDot()
+    
     --Lives
     --Lives order: 1 2 3
     local livesText = display.newText(sceneGroup, "lives", 55, 60 , globals.font.regular, 25)
@@ -149,6 +149,7 @@ function scene:show( event )
     local sceneGroup = display.newGroup()
     
     if ( phase == "will" ) then
+        createDot()
         globals.score = 0
         scoreText.text = globals.score
         isRunning = true
@@ -335,11 +336,11 @@ function scene:show( event )
                 if pattern ~= nil then pattern = nil end
                 if userPattern ~= nil then userPattern = nil end
             end
-            local function removeButtonListeners()
+            local function removeButtonListeners(bool)
                 globals.removeAllListeners(resumebg)
                 globals.removeAllListeners(restartbg)
                 globals.removeAllListeners(exitbg)
-                globals.removeAllListeners(pauseButton)
+                if bool == true then globals.removeAllListeners(pauseButton) end
             end
             isRunning = false
             transition.pause(dot)
@@ -354,7 +355,7 @@ function scene:show( event )
             local function resumeGame()
                 print("Resuming game")
                 makeNil()
-                removeButtonListeners()
+                removeButtonListeners(false)
                 isRunning = true
                 if timerHandler ~= nil then
                     timer.resume(timerHandler)
@@ -373,7 +374,7 @@ function scene:show( event )
             end
             local function restartGame()
                 print("Restarting game")
-                removeButtonListeners()
+                removeButtonListeners(false)
                 makeNil()
                 transition.cancel(dot)
                 for i = 1, globals.settings.numDots do
@@ -399,7 +400,7 @@ function scene:show( event )
             end
             local function exitGame()
                 print("Exiting game")
-                removeButtonListeners()
+                removeButtonListeners(true)
                 makeNil()
                 transition.cancel(dot)
                 transitionPauseGroup(1000)
@@ -408,11 +409,6 @@ function scene:show( event )
                     timer.cancel(timerHandler) 
                     timerHandler = nil
                 end
-                for i = 1, globals.settings.numDots do
-                    display.remove(dot[i])
-                    dot[i] = nil
-                end
-                createDot()
                 composer.gotoScene("menu", {effect = "slideRight"})
             end
             resumebg:addEventListener("tap", resumeGame)
@@ -440,6 +436,10 @@ function scene:hide( event )
             if dot[i].xScale == 2 and dot[i].yScale == 2 then
                 transition.to(dot[i], {time = flashSpeed, xScale = 1, yScale = 1})
             end
+        end
+        for i = 1, globals.settings.numDots do
+            display.remove(dot[i])
+            dot[i] = nil
         end
     end
 end
