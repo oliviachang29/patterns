@@ -3,6 +3,7 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local globals = require("globals")
+local ads = require "ads"
 
 -- local forward references should go here
 local scoreText
@@ -41,6 +42,13 @@ function scene:show( event )
     
     if ( phase == "will" ) then
         scoreText.text = globals.score
+        -- if on simulator, let user know they must build for device
+        if system.getInfo("environment") == "simulator" then
+            print( "Please build for device or Xcode simulator to test this sample.")
+        else
+            -- start with banner ad
+            ads.show( "banner", { x=0, y=-23} ) --Show ads
+        end
     elseif ( phase == "did" ) then
         composer.returnTo = "menu"
 

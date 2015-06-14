@@ -33,13 +33,8 @@ end
 
 --Music
 if globals.settings.music == true then
-    local GGMusic = require( "GGMusic" )
-    globals.music = GGMusic:new()
-    globals.music:add( "audio/music/track1.mp3" )
-    globals.music:add( "audio/music/track2.mp3" )
-    globals.music:setVolume( 0.6 )
-    globals.music:play()
-    globals.music.random = true
+    local soundtrack = require("soundtrack")
+    soundtrack:start()
 end
 
 local function onKeyEvent( event )
@@ -77,6 +72,15 @@ local function onKeyEvent( event )
 end
 
 Runtime:addEventListener( "key", onKeyEvent )
+
+--Ads
+local ads = require "ads"
+local function adListener(event)
+    print("event.isError = " .. tostring(event.isError))
+    globals.adsError = event.isError
+end
+
+ads.init( "admob", "ca-app-pub-2716288033999131/6851992402", adListener ) --Initialize the ads
 
 --Splash Screen
 local function splashScreen()

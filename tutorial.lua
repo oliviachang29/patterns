@@ -43,23 +43,25 @@ function scene:show( event )
                 yepText.text = "got it."
             end
             local function goto()
-                transition.to(youGotIt, {time = 750, x = 1000})
-                if thatsOk ~= nil then
-                    transition.to(thatsOk, {time = 750, x = 1000})
-                    thatsOk = nil
-                end
-                transition.to(rememberText, {time = 750, x = 1000})
-                transition.to(threeStrikes, {time = 750, x = 1000, onComplete = scene1})
-                transition.to(yepbg, {time = 750, x = 1000})
-                transition.to(yepText, {time = 750, x = 1000})
-                youGotIt, rememberText, threeStrikes, yepbg, yepText = nil, nil, nil, nil, nil
+                local gotoX = 1000
                 if globals.settings.openedBefore == false then
                     composer.gotoScene("menu", {effect = "slideLeft"})
                     globals.settings.openedBefore = true
                     saveTable(globals.settings, "settings.json")
+                    gotoX = display.contentWidth - 1000
                 elseif globals.settings.openedBefore == true then
                     composer.gotoScene("about", {effect = "slideRight"})
                 end
+                transition.to(youGotIt, {time = 750, x = gotoX})
+                if thatsOk ~= nil then
+                    transition.to(thatsOk, {time = 750, x = gotoX})
+                    thatsOk = nil
+                end
+                transition.to(rememberText, {time = 750, x = gotoX})
+                transition.to(threeStrikes, {time = 750, x = gotoX, onComplete = scene1})
+                transition.to(yepbg, {time = 750, x = gotoX})
+                transition.to(yepText, {time = 750, x = gotoX})
+                youGotIt, rememberText, threeStrikes, yepbg, yepText = nil, nil, nil, nil, nil
             end
             yepbg:addEventListener("tap", goto)
         end
